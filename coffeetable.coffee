@@ -15,8 +15,8 @@ default_settings =
     ls_key          : 'coffee-table'
 
 
-log = -> console.log arguments
-dir = -> console.dir arguments
+window.log = -> console.log arguments
+window.dir = -> console.dir arguments
 
 class CoffeeTable
     settings = null

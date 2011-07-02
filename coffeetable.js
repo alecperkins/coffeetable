@@ -4,7 +4,7 @@
   
   A drop-in workbench for experimentation.
   http://github.com/alecperkins/coffeetable
-  */  var CoffeeTable, default_settings, dir, log;
+  */  var CoffeeTable, default_settings;
   default_settings = {
     coffeescript_js: "https://raw.github.com/alecperkins/coffeetable/master/lib/coffee_script-1.1.1-min.js",
     style: {
@@ -15,10 +15,10 @@
     local_storage: true,
     ls_key: 'coffee-table'
   };
-  log = function() {
+  window.log = function() {
     return console.log(arguments);
   };
-  dir = function() {
+  window.dir = function() {
     return console.dir(arguments);
   };
   CoffeeTable = (function() {
