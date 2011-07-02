@@ -14,7 +14,7 @@ Load `coffeetable-min.js` into the page:
 
     <script type="application/javascript" src="https://raw.github.com/alecperkins/coffeetable/master/coffeetable-min.js"></script>
 
-Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press `shift`+`enter` to execute it. The output will be listed below. `log` and `dir` are shortcuts to the `console` functions. `this` is the `window` object. Use `@foo = bar` to make a variable global. It will then be accessible in subsequent entries. If localStorage is supported, CoffeeTable uses it to persist the history, and then replay it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using `tab`, and go through the history using the `up arrow`.
+Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press `enter` to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use `shift`+`enter` instead to execute code. `log` and `dir` are shortcuts to the `console` functions. `this` is the `window` object. Use `@foo = bar` to make a variable global. It will then be accessible in subsequent entries. If localStorage is supported, CoffeeTable uses it to persist the history, and then replay it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using `tab`, and go through the history using the `up arrow`.
     
 ### Output color coding
 

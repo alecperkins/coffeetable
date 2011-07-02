@@ -8,11 +8,12 @@ http://github.com/alecperkins/coffeetable
 default_settings =
     coffeescript_js : "https://raw.github.com/alecperkins/coffeetable/master/lib/coffee_script-1.1.1-min.js"
     style:
-      position        : 'fixed'
-      top             : '5px'
-      right           : '5px'
+      position          : 'fixed'
+      top               : '5px'
+      right             : '5px'
     local_storage   : true
     ls_key          : 'coffee-table'
+    multi_line      : false
 
 
 window.log = -> console.log arguments
@@ -34,7 +35,7 @@ class CoffeeTable
         source: []
         result: []
 
-    constructor: (opts) ->
+    constructor: (opts={}) ->
 
         settings = default_settings
         for k, v of opts
@@ -51,37 +52,59 @@ class CoffeeTable
                 'z-index'           : '9999999'
                 'box-shadow'        : '0px 0px 4px #222'
                 'font-size'         : '12px'
+                'max-height'        : '95%'
+                'overflow-y'        : 'scroll'
             button:
                 'float'             : 'right'
                 'background'        : 'white'
                 'border'            : '1px solid #ccc'
                 'color'             : '#991111'
+                'cursor'            : 'pointer'
             button_active:  
                 'background'        : '#991111'
                 'color'             : 'white'
             textarea:   
                 'font-family'       : 'monospace'
-                'font-size'         : '1em'
+                'font-size'         : '15px'
                 'min-width'         : '400px'
-                'min-height'        : '2em'
+                'height'            : '22px'
                 'margin'            : '4px'
             div:
                 'display'           : 'none'
             ul:
-                'margin'            : '4px'
+                'margin'            : '8px'
                 'padding'           : '4px 4px 4px 16px'
                 'font-family'       : 'monospace'
             li:
-                'padding'           : '4px 4px 4px 0'
+                'padding'           : '4px 4px 4px 4px'
                 'cursor'            : 'pointer'
             span:
+                'padding'           : '4px'
+                'text-align'        : 'center'
+                'cursor'            : 'pointer'
+                'float'             : 'left'
+                'color'             : '#ccc'
+                'font-variant'      : 'small-caps'
+                'display'           : 'none'
+            a:
                 'padding'           : '4px'
                 'text-align'        : 'center'
                 'cursor'            : 'pointer'
                 'float'             : 'right'
                 'color'             : '#ccc'
                 'font-variant'      : 'small-caps'
+            input:
+                'vertical-align'    : 'middle'
+            p:
+                'padding'           : '4px'
+                'margin'            : '0'
+                'float'             : 'right'
+                'display'           : 'inline-block'
+                'width'             : '80px'
+                'color'             : '#ccc'
+                'font-variant'      : 'small-caps'
                 'display'           : 'none'
+                'text-align'        : 'right'
 
 
         result_styles =
@@ -98,7 +121,18 @@ class CoffeeTable
             'boolean':
                 'color'           : '#229999'
 
-        template = '<div><button>CoffeeTable</button><div><textarea></textarea><ul></ul><span>clear</span></div></div>'
+        template = "
+            <div>
+                <button>CoffeeTable</button>
+                <span>clear</span>
+                <a href='https://github.com/alecperkins/coffeetable' target='_blank'>?</a>
+                <p>multiline <input type='checkbox'></p>
+                <div>
+                    <textarea></textarea>
+                    <ul></ul>
+                </div>
+            </div>
+        "
 
         loadCSJS()
         renderWidget()
@@ -168,6 +202,10 @@ class CoffeeTable
         
         new_li.click ->
             loadPrevious(false, this_result_index)
+        new_li.mousedown ->
+            new_li.css('background': 'rgba(255,255,0,0.8)')
+        new_li.mouseup ->
+            new_li.css('background': 'rgba(255,255,0,0.2)')
 
         new_li.prependTo($els.ul)
         $els.span.show()
@@ -197,6 +235,12 @@ class CoffeeTable
             $els.textarea.selectionStart = 0
             $els.textarea.selectionEnd = 0
 
+    toggleMultiLine = ->
+        console.log 'toggle multi'
+        settings.multi_line = not settings.multi_line
+        new_height = if settings.multi_line then '4em' else styles.textarea.height
+        $els.textarea.css('height',new_height).focus()
+
     renderWidget = ->
         widget = $(template)
 
@@ -207,6 +251,9 @@ class CoffeeTable
             button      : widget.find('button')
             div         : widget.find('div')
             span        : widget.find('span')
+            a           : widget.find('a')
+            input       : widget.find('input')
+            p           : widget.find('p')
         for el_name, el of $els
             el.css(styles[el_name]) 
 
@@ -214,9 +261,11 @@ class CoffeeTable
             if active
                 $els.button.css(styles.button)
                 $els.div.hide()
+                $els.p.hide()
             else
                 $els.button.css(styles.button_active)
                 $els.div.show()
+                $els.p.show()
                 $els.textarea.focus()
             active = not active
 
@@ -227,6 +276,9 @@ class CoffeeTable
         , ->
             $els.span.css('color', styles.span.color)
 
+        $els.input.click ->
+            toggleMultiLine()
+
         $els.textarea.bind 'keydown', (e) ->
             entered_source = $els.textarea.val()
             if @selectionStart is 0
@@ -235,7 +287,7 @@ class CoffeeTable
                     loadPrevious()
                 else if e.which is 40
                     loadPrevious(true)
-            if e.which is 13 and e.shiftKey
+            if e.which is 13 and (not settings.multi_line or e.shiftKey)
                 e.preventDefault()
                 if entered_source isnt ''
                     execute(entered_source)
@@ -248,7 +300,8 @@ class CoffeeTable
                 @selectionStart = start + 4
                 @selectionEnd = start + 4
 
-
+        if settings.multi_line
+            $els.input.click()
         widget.appendTo('body')
 
     loadCSJS = ->
@@ -269,4 +322,4 @@ class CoffeeTable
 window.CoffeeTable = CoffeeTable
 
 $(document).ready ->
-    window.coffeetable = new CoffeeTable()
+    window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings)

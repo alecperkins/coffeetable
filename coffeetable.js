@@ -13,7 +13,8 @@
       right: '5px'
     },
     local_storage: true,
-    ls_key: 'coffee-table'
+    ls_key: 'coffee-table',
+    multi_line: false
   };
   window.log = function() {
     return console.log(arguments);
@@ -22,7 +23,7 @@
     return console.dir(arguments);
   };
   CoffeeTable = (function() {
-    var $els, active, clearHistory, execute, history, history_index, loadCSJS, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template;
+    var $els, active, clearHistory, execute, history, history_index, loadCSJS, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
     settings = null;
     $els = null;
     styles = null;
@@ -36,6 +37,9 @@
     };
     function CoffeeTable(opts) {
       var k, v;
+      if (opts == null) {
+        opts = {};
+      }
       settings = default_settings;
       for (k in opts) {
         v = opts[k];
@@ -51,13 +55,16 @@
           'border': '2px solid white',
           'z-index': '9999999',
           'box-shadow': '0px 0px 4px #222',
-          'font-size': '12px'
+          'font-size': '12px',
+          'max-height': '95%',
+          'overflow-y': 'scroll'
         },
         button: {
           'float': 'right',
           'background': 'white',
           'border': '1px solid #ccc',
-          'color': '#991111'
+          'color': '#991111',
+          'cursor': 'pointer'
         },
         button_active: {
           'background': '#991111',
@@ -65,31 +72,53 @@
         },
         textarea: {
           'font-family': 'monospace',
-          'font-size': '1em',
+          'font-size': '15px',
           'min-width': '400px',
-          'min-height': '2em',
+          'height': '22px',
           'margin': '4px'
         },
         div: {
           'display': 'none'
         },
         ul: {
-          'margin': '4px',
+          'margin': '8px',
           'padding': '4px 4px 4px 16px',
           'font-family': 'monospace'
         },
         li: {
-          'padding': '4px 4px 4px 0',
+          'padding': '4px 4px 4px 4px',
           'cursor': 'pointer'
         },
         span: {
           'padding': '4px',
           'text-align': 'center',
           'cursor': 'pointer',
-          'float': 'right',
+          'float': 'left',
           'color': '#ccc',
           'font-variant': 'small-caps',
           'display': 'none'
+        },
+        a: {
+          'padding': '4px',
+          'text-align': 'center',
+          'cursor': 'pointer',
+          'float': 'right',
+          'color': '#ccc',
+          'font-variant': 'small-caps'
+        },
+        input: {
+          'vertical-align': 'middle'
+        },
+        p: {
+          'padding': '4px',
+          'margin': '0',
+          'float': 'right',
+          'display': 'inline-block',
+          'width': '80px',
+          'color': '#ccc',
+          'font-variant': 'small-caps',
+          'display': 'none',
+          'text-align': 'right'
         }
       };
       result_styles = {
@@ -111,7 +140,7 @@
           'color': '#229999'
         }
       };
-      template = '<div><button>CoffeeTable</button><div><textarea></textarea><ul></ul><span>clear</span></div></div>';
+      template = "            <div>                <button>CoffeeTable</button>                <span>clear</span>                <a href='https://github.com/alecperkins/coffeetable' target='_blank'>?</a>                <p>multiline <input type='checkbox'></p>                <div>                    <textarea></textarea>                    <ul></ul>                </div>            </div>        ";
       loadCSJS();
       renderWidget();
       if (settings.local_storage) {
@@ -191,6 +220,16 @@
       new_li.click(function() {
         return loadPrevious(false, this_result_index);
       });
+      new_li.mousedown(function() {
+        return new_li.css({
+          'background': 'rgba(255,255,0,0.8)'
+        });
+      });
+      new_li.mouseup(function() {
+        return new_li.css({
+          'background': 'rgba(255,255,0,0.2)'
+        });
+      });
       new_li.prependTo($els.ul);
       $els.span.show();
       return typeof localStorage !== "undefined" && localStorage !== null ? localStorage.setItem(settings.ls_key, JSON.stringify(history.source)) : void 0;
@@ -226,6 +265,13 @@
         return $els.textarea.selectionEnd = 0;
       }
     };
+    toggleMultiLine = function() {
+      var new_height;
+      console.log('toggle multi');
+      settings.multi_line = !settings.multi_line;
+      new_height = settings.multi_line ? '4em' : styles.textarea.height;
+      return $els.textarea.css('height', new_height).focus();
+    };
     renderWidget = function() {
       var el, el_name, widget;
       widget = $(template);
@@ -235,7 +281,10 @@
         ul: widget.find('ul'),
         button: widget.find('button'),
         div: widget.find('div'),
-        span: widget.find('span')
+        span: widget.find('span'),
+        a: widget.find('a'),
+        input: widget.find('input'),
+        p: widget.find('p')
       };
       for (el_name in $els) {
         el = $els[el_name];
@@ -245,9 +294,11 @@
         if (active) {
           $els.button.css(styles.button);
           $els.div.hide();
+          $els.p.hide();
         } else {
           $els.button.css(styles.button_active);
           $els.div.show();
+          $els.p.show();
           $els.textarea.focus();
         }
         return active = !active;
@@ -260,6 +311,9 @@
       }, function() {
         return $els.span.css('color', styles.span.color);
       });
+      $els.input.click(function() {
+        return toggleMultiLine();
+      });
       $els.textarea.bind('keydown', function(e) {
         var end, entered_source, start;
         entered_source = $els.textarea.val();
@@ -271,7 +325,7 @@
             loadPrevious(true);
           }
         }
-        if (e.which === 13 && e.shiftKey) {
+        if (e.which === 13 && (!settings.multi_line || e.shiftKey)) {
           e.preventDefault();
           if (entered_source !== '') {
             execute(entered_source);
@@ -286,6 +340,9 @@
           return this.selectionEnd = start + 4;
         }
       });
+      if (settings.multi_line) {
+        $els.input.click();
+      }
       return widget.appendTo('body');
     };
     loadCSJS = function() {
@@ -309,6 +366,6 @@
   })();
   window.CoffeeTable = CoffeeTable;
   $(document).ready(function() {
-    return window.coffeetable = new CoffeeTable();
+    return window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings);
   });
 }).call(this);
