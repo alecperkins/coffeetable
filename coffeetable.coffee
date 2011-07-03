@@ -15,6 +15,8 @@ default_settings =
     ls_key          : 'coffee-table'
     multi_line      : false
 
+# Trap calls to console.log and console.dir if the console doesn't exist.
+# Lookin' at you, IE.
 console ?=
     log: ->
     dir: ->
@@ -44,6 +46,7 @@ class CoffeeTable
         for k, v of opts
             settings[k] = v
 
+        # Applying the styles using JS until scoped="scoped" works
         styles =
             widget:
                 'position'          : "#{ settings.style.position }"
@@ -56,7 +59,6 @@ class CoffeeTable
                 'box-shadow'        : '0px 0px 4px #222'
                 'font-size'         : '12px'
                 'max-height'        : '95%'
-                'overflow-y'        : 'scroll'
             button:
                 'float'             : 'right'
                 'background'        : 'white'
@@ -74,11 +76,12 @@ class CoffeeTable
                 'margin'            : '4px'
             div:
                 'display'           : 'none'
-            ul:
+            CTHistory:
                 'margin'            : '8px'
                 'padding'           : '4px 4px 4px 16px'
                 'font-family'       : 'monospace'
                 'list-style-type'   : 'circle'
+                'overflow-y'        : 'scroll'
             li:
                 'padding'           : '4px 4px 4px 4px'
                 'cursor'            : 'pointer'
@@ -109,6 +112,16 @@ class CoffeeTable
                 'font-variant'      : 'small-caps'
                 'display'           : 'none'
                 'text-align'        : 'right'
+            CTAutocomplete:
+                'position'          : 'absolute'
+                'top'               : '0'
+                'left'              : '-250px'
+                'display'           : 'block'
+                'background'        : 'rgba(255,255,255,0.8)'
+                'box-shadow'        : '0px 0px 4px #222'
+                'width'             : '200px'
+                'max-height'        : '800px'
+                'overflow-y'        : 'scroll'
 
 
         result_styles =
@@ -133,7 +146,8 @@ class CoffeeTable
                 <p>multiline <input type='checkbox'></p>
                 <div>
                     <textarea></textarea>
-                    <ul></ul>
+                    <ul class='CTAutocomplete'></ul>
+                    <ul class='CTHistory'></ul>
                 </div>
             </div>
         "
@@ -143,6 +157,86 @@ class CoffeeTable
 
         if settings.local_storage
             loadFromStorage()
+
+    autocomplete_items = [[window,'window']]
+    autocomplete_query = ''
+    getAutocomplete = (e, text) ->
+        # numbers: 48..57
+        # letters: 65..90
+        # space: 32
+        # period: 190
+        # (: 57 + shiftKey
+        # ): 48 + shiftKey
+
+        # in numbers
+        push_token = pop_token = false
+        character = null
+        # console.log e.which
+        if text.length is 0
+            autocomplete_query = ''
+
+        if e.which is 8 # backspace
+            if autocomplete_query.length > 0
+                autocomplete_query = autocomplete_query[0...autocomplete_query.length-1]
+            else
+                if autocomplete_items.length > 1
+                    autocomplete_query = autocomplete_items.pop()[1]
+                else
+                    autocomplete_query = ''
+                
+            console.log 
+        else
+            if 65 <= e.which <= 90 or 48 <= e.which <= 57
+                character = String.fromCharCode(e.which)
+                if not e.shiftKey
+                    character = character.toLowerCase()
+                else
+                    if e.which is 57
+                        character = '('
+                        pop_token = true
+                    else if e.which is 48
+                        character = ')'
+                        pop_token = true
+                    else if e.which is 52
+                        character = '$'
+            else if e.which is 190
+                character = '.'
+                push_token = true
+            else if e.which is 32
+                character = ' '
+                pop_token = true
+            else if e.which is 13   # enter
+                pop_token = true
+            
+            if push_token or pop_token
+                if autocomplete_query.length > 0
+                    if push_token
+                        autocomplete_items.push([autocomplete_items[autocomplete_items.length-1][autocomplete_query], autocomplete_query])
+                    else
+                        autocomplete_items = [[window,'window']]
+                autocomplete_query = ''
+            else if character?
+                autocomplete_query += character
+        
+        console.log autocomplete_query
+
+        match_list = []
+        to_match = new RegExp('^' + autocomplete_query)
+        for attribute, value of autocomplete_items[autocomplete_items.length-1][0]
+            matches = to_match.exec(attribute)
+            if matches?.length > 0
+                match_list.push(attribute)
+        
+        match_list.sort()
+        html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>#{ autocomplete_items[autocomplete_items.length-1][1] }</li>"
+        html += "<li>#{ item }</li>" for item in match_list
+        $els.CTAutocomplete.html(html)
+
+        if e.which is 9 and match_list > 0 and autocomplete_query.length > 0
+            console.log match_list[0].replace(autocomplete_query, '')
+        
+
+
 
     loadFromStorage = ->
         previous_data = localStorage?.getItem('coffee-table')
@@ -161,7 +255,7 @@ class CoffeeTable
 
     execute = (source) ->
         if history.source.length is 0
-            $els.ul.empty()
+            $els.CTHistory.empty()
         history_index = -1
         history.source.push(source)
 
@@ -214,25 +308,27 @@ class CoffeeTable
         new_li.mouseup ->
             new_li.css('background': 'rgba(255,255,0,0.2)')
 
-        new_li.prependTo($els.ul)
+        new_li.prependTo($els.CTHistory)
         $els.span.show()
         localStorage?.setItem(settings.ls_key, JSON.stringify(history.source))
 
 
     clearHistory = ->
-        $els.ul.empty()
+        $els.CTHistory.empty()
         history.source = []
         history.result = []
         localStorage?.removeItem(settings.ls_key)
         $els.span.hide()
         appendInstructions()
+        autocomplete_items = [[window,'window']]
+        autocomplete_query = ''
 
     appendInstructions = ->
         instructions = $('<li>type CoffeeScript, press enter</li>')
         instructions.css
             'list-style-type'   : 'none'
             'text-align'        : 'center'
-        instructions.appendTo($els.ul)
+        instructions.appendTo($els.CTHistory)
         
 
     loadPrevious = (forward=false, target_index) ->
@@ -261,22 +357,24 @@ class CoffeeTable
             instruction = 'type CoffeeScript, press enter'
         $els.textarea.css('height',new_height).focus()
         if history.source.length is 0
-            $els.ul.find('li').text(instruction)
+            $els.CTHistory.find('li').text(instruction)
 
     renderWidget = ->
         widget = $(template)
 
         $els =
-            widget      : widget
-            textarea    : widget.find('textarea')
-            ul          : widget.find('ul')
-            button      : widget.find('button')
-            div         : widget.find('div')
-            span        : widget.find('span')
-            a           : widget.find('a')
-            input       : widget.find('input')
-            p           : widget.find('p')
-            li          : widget.find('li')
+            widget          : widget
+            textarea        : widget.find('textarea')
+            CTAutocomplete  : widget.find('ul.CTAutocomplete')
+            CTHistory       : widget.find('ul.CTHistory')
+            button          : widget.find('button')
+            div             : widget.find('div')
+            span            : widget.find('span')
+            a               : widget.find('a')
+            input           : widget.find('input')
+            p               : widget.find('p')
+            li              : widget.find('li')
+            autocomplete    : widget.find('autocomplete')
         for el_name, el of $els
             el.css(styles[el_name]) 
         appendInstructions()
@@ -305,22 +403,24 @@ class CoffeeTable
         $els.textarea.bind 'keydown', (e) ->
             entered_source = $els.textarea.val()
             if @selectionStart is 0
-                if e.which is 38
+                if e.which is 38 # up arrow
                     loadPrevious()
-                else if e.which is 40
+                else if e.which is 40 # down arrow
                     loadPrevious(true)
-            if e.which is 13 and (not settings.multi_line or e.shiftKey)
+            if e.which is 13 and (not settings.multi_line or e.shiftKey) # enter key
                 e.preventDefault()
                 if entered_source isnt ''
                     execute(entered_source)
                     $els.textarea.val('')
-            else if e.which is 9
+            else if e.which is 9 #tab
                 e.preventDefault()
                 start = @selectionStart
                 end = @selectionEnd
                 @value = @value.substring(0,start) + "    " + @value.substring(start)
                 @selectionStart = start + 4
                 @selectionEnd = start + 4
+            if not settings.multi_line
+                getAutocomplete(e, entered_source)
 
         if settings.multi_line
             $els.input.click()
