@@ -23,7 +23,7 @@
     return console.dir(arguments);
   };
   CoffeeTable = (function() {
-    var $els, active, clearHistory, execute, history, history_index, loadCSJS, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
+    var $els, active, appendInstructions, clearHistory, execute, history, history_index, loadCSJS, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
     settings = null;
     $els = null;
     styles = null;
@@ -173,6 +173,9 @@
     };
     execute = function(source) {
       var cs_error, error_output, js, js_error, new_li, result, this_result_index;
+      if (history.source.length === 0) {
+        $els.ul.empty();
+      }
       history_index = -1;
       history.source.push(source);
       error_output = null;
@@ -243,7 +246,17 @@
       if (typeof localStorage !== "undefined" && localStorage !== null) {
         localStorage.removeItem(settings.ls_key);
       }
-      return $els.span.hide();
+      $els.span.hide();
+      return appendInstructions();
+    };
+    appendInstructions = function() {
+      var instructions;
+      instructions = $('<li>type CoffeeScript, press enter</li>');
+      instructions.css({
+        'list-style-type': 'none',
+        'text-align': 'center'
+      });
+      return instructions.appendTo($els.ul);
     };
     loadPrevious = function(forward, target_index) {
       if (forward == null) {
@@ -268,11 +281,20 @@
       }
     };
     toggleMultiLine = function() {
-      var new_height;
+      var instruction, new_height;
       console.log('toggle multi');
       settings.multi_line = !settings.multi_line;
-      new_height = settings.multi_line ? '4em' : styles.textarea.height;
-      return $els.textarea.css('height', new_height).focus();
+      if (settings.multi_line) {
+        new_height = '4em';
+        instruction = 'type CoffeeScript, press shift+enter';
+      } else {
+        new_height = styles.textarea.height;
+        instruction = 'type CoffeeScript, press enter';
+      }
+      $els.textarea.css('height', new_height).focus();
+      if (history.source.length === 0) {
+        return $els.ul.find('li').text(instruction);
+      }
     };
     renderWidget = function() {
       var el, el_name, widget;
@@ -286,12 +308,14 @@
         span: widget.find('span'),
         a: widget.find('a'),
         input: widget.find('input'),
-        p: widget.find('p')
+        p: widget.find('p'),
+        li: widget.find('li')
       };
       for (el_name in $els) {
         el = $els[el_name];
         el.css(styles[el_name]);
       }
+      appendInstructions();
       $els.button.click(function() {
         if (active) {
           $els.button.css(styles.button);

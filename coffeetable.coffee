@@ -157,6 +157,8 @@ class CoffeeTable
             execHistory()
 
     execute = (source) ->
+        if history.source.length is 0
+            $els.ul.empty()
         history_index = -1
         history.source.push(source)
 
@@ -220,6 +222,15 @@ class CoffeeTable
         history.result = []
         localStorage?.removeItem(settings.ls_key)
         $els.span.hide()
+        appendInstructions()
+
+    appendInstructions = ->
+        instructions = $('<li>type CoffeeScript, press enter</li>')
+        instructions.css
+            'list-style-type'   : 'none'
+            'text-align'        : 'center'
+        instructions.appendTo($els.ul)
+        
 
     loadPrevious = (forward=false, target_index) ->
         if target_index?
@@ -240,8 +251,15 @@ class CoffeeTable
     toggleMultiLine = ->
         console.log 'toggle multi'
         settings.multi_line = not settings.multi_line
-        new_height = if settings.multi_line then '4em' else styles.textarea.height
+        if settings.multi_line
+            new_height = '4em'
+            instruction = 'type CoffeeScript, press shift+enter'
+        else
+            new_height = styles.textarea.height
+            instruction = 'type CoffeeScript, press enter'
         $els.textarea.css('height',new_height).focus()
+        if history.source.length is 0
+            $els.ul.find('li').text(instruction)
 
     renderWidget = ->
         widget = $(template)
@@ -256,9 +274,10 @@ class CoffeeTable
             a           : widget.find('a')
             input       : widget.find('input')
             p           : widget.find('p')
+            li          : widget.find('li')
         for el_name, el of $els
             el.css(styles[el_name]) 
-
+        appendInstructions()
         $els.button.click ->
             if active
                 $els.button.css(styles.button)
