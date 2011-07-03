@@ -75,6 +75,7 @@ class CoffeeTable
                 'margin'            : '8px'
                 'padding'           : '4px 4px 4px 16px'
                 'font-family'       : 'monospace'
+                'list-style-type'   : 'circle'
             li:
                 'padding'           : '4px 4px 4px 4px'
                 'cursor'            : 'pointer'
@@ -83,7 +84,7 @@ class CoffeeTable
                 'text-align'        : 'center'
                 'cursor'            : 'pointer'
                 'float'             : 'left'
-                'color'             : '#ccc'
+                'color'             : '#555'
                 'font-variant'      : 'small-caps'
                 'display'           : 'none'
             a:
@@ -91,7 +92,7 @@ class CoffeeTable
                 'text-align'        : 'center'
                 'cursor'            : 'pointer'
                 'float'             : 'right'
-                'color'             : '#ccc'
+                'color'             : '#555'
                 'font-variant'      : 'small-caps'
             input:
                 'vertical-align'    : 'middle'
@@ -101,7 +102,7 @@ class CoffeeTable
                 'float'             : 'right'
                 'display'           : 'inline-block'
                 'width'             : '80px'
-                'color'             : '#ccc'
+                'color'             : '#555'
                 'font-variant'      : 'small-caps'
                 'display'           : 'none'
                 'text-align'        : 'right'
@@ -202,6 +203,7 @@ class CoffeeTable
         
         new_li.click ->
             loadPrevious(false, this_result_index)
+            $els.textarea.focus()
         new_li.mousedown ->
             new_li.css('background': 'rgba(255,255,0,0.8)')
         new_li.mouseup ->

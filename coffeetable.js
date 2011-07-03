@@ -83,7 +83,8 @@
         ul: {
           'margin': '8px',
           'padding': '4px 4px 4px 16px',
-          'font-family': 'monospace'
+          'font-family': 'monospace',
+          'list-style-type': 'circle'
         },
         li: {
           'padding': '4px 4px 4px 4px',
@@ -94,7 +95,7 @@
           'text-align': 'center',
           'cursor': 'pointer',
           'float': 'left',
-          'color': '#ccc',
+          'color': '#555',
           'font-variant': 'small-caps',
           'display': 'none'
         },
@@ -103,7 +104,7 @@
           'text-align': 'center',
           'cursor': 'pointer',
           'float': 'right',
-          'color': '#ccc',
+          'color': '#555',
           'font-variant': 'small-caps'
         },
         input: {
@@ -115,7 +116,7 @@
           'float': 'right',
           'display': 'inline-block',
           'width': '80px',
-          'color': '#ccc',
+          'color': '#555',
           'font-variant': 'small-caps',
           'display': 'none',
           'text-align': 'right'
@@ -218,7 +219,8 @@
         });
       });
       new_li.click(function() {
-        return loadPrevious(false, this_result_index);
+        loadPrevious(false, this_result_index);
+        return $els.textarea.focus();
       });
       new_li.mousedown(function() {
         return new_li.css({

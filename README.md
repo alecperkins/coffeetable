@@ -1,5 +1,5 @@
 # CoffeeTable
-A drop-in workbench for experimentation, CoffeeTable provides a CoffeeScript console on a page.
+A drop-in workbench for experimentation. CoffeeTable provides a CoffeeScript console on a page.
 
 [repo](https://github.com/alecperkins/coffeetable)
 
