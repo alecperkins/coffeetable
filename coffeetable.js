@@ -16,6 +16,14 @@
     ls_key: 'coffee-table',
     multi_line: false
   };
+    if (typeof console !== "undefined" && console !== null) {
+    console;
+  } else {
+    console = {
+      log: function() {},
+      dir: function() {}
+    };
+  };
   window.log = function() {
     return console.log(arguments);
   };
@@ -282,7 +290,6 @@
     };
     toggleMultiLine = function() {
       var instruction, new_height;
-      console.log('toggle multi');
       settings.multi_line = !settings.multi_line;
       if (settings.multi_line) {
         new_height = '4em';
@@ -345,7 +352,6 @@
         entered_source = $els.textarea.val();
         if (this.selectionStart === 0) {
           if (e.which === 38) {
-            console.log(history_index);
             loadPrevious();
           } else if (e.which === 40) {
             loadPrevious(true);

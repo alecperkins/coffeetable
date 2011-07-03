@@ -15,6 +15,9 @@ default_settings =
     ls_key          : 'coffee-table'
     multi_line      : false
 
+console ?=
+    log: ->
+    dir: ->
 
 window.log = -> console.log arguments
 window.dir = -> console.dir arguments
@@ -249,7 +252,6 @@ class CoffeeTable
             $els.textarea.selectionEnd = 0
 
     toggleMultiLine = ->
-        console.log 'toggle multi'
         settings.multi_line = not settings.multi_line
         if settings.multi_line
             new_height = '4em'
@@ -304,7 +306,6 @@ class CoffeeTable
             entered_source = $els.textarea.val()
             if @selectionStart is 0
                 if e.which is 38
-                    console.log history_index
                     loadPrevious()
                 else if e.which is 40
                     loadPrevious(true)
