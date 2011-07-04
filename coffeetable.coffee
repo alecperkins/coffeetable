@@ -1,10 +1,13 @@
 ###
 CoffeeTable
 
-A drop-in workbench for experimentation.
-http://github.com/alecperkins/coffeetable
+A drop-in, CoffeeScript-fluent console for web pages.
+
+See https://github.com/alecperkins/coffeetable for more information, and
+http://code.alecperkins.net/coffeetable for a working demo.
 ###
 
+# Default widget settings.
 default_settings =
     coffeescript_js : 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js'
     style:
@@ -23,10 +26,12 @@ console ?=
     log: ->
     dir: ->
 
-window.log = -> console.log arguments
-window.dir = -> console.dir arguments
+# Alias log and dir for shorter typing.
+window.log = -> console.log arguments...
+window.dir = -> console.dir arguments...
 
-
+# Use $ even if jQuery is in no-conflict mode
+$ = window.jQuery
 
 class CoffeeTable
     settings = null
@@ -60,8 +65,11 @@ class CoffeeTable
                 'border'            : '2px solid white'
                 'z-index'           : '9999999'
                 'box-shadow'        : '0px 0px 4px #222'
+                '-moz-box-shadow'   : '0px 0px 4px #222'
+                '-webkit-box-shadow'   : '0px 0px 4px #222'
                 'font-size'         : '12px'
                 'max-height'        : '95%'
+                'max-width'         : '900px'
             button:
                 'float'             : 'right'
                 'background'        : 'white'
@@ -123,6 +131,8 @@ class CoffeeTable
                 'display'           : 'block'
                 'background'        : 'rgba(255,255,255,0.9)'
                 'box-shadow'        : '0px 0px 4px #222'
+                '-moz-box-shadow'   : '0px 0px 4px #222'
+                '-webkit-box-shadow'   : '0px 0px 4px #222'
                 'width'             : '250px'
                 'max-height'        : "#{ window.innerHeight - 140 }px"
                 'overflow-y'        : 'scroll'
@@ -166,29 +176,30 @@ class CoffeeTable
         $els.CTAutocomplete.css('max-height',height)
         $els.CTHistory.css('max-height',height)
 
-    getAutocomplete = (text) ->
-        tokens = text.split('.')
-        working_items = [[window, 'window']]
-        for token in tokens
-            token = token.replace('(','').replace(')','')
-            if token.length > 0 and working_items[working_items.length-1][0][token]?
-                working_items.push([working_items[working_items.length-1][0][token], token])
-        
-        # abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$_
+    getAutocomplete = (text, e) ->
+        if e.which is 8 and text.length is 0 and $els.CTAutocomplete.html().length isnt 0
+            $els.CTAutocomplete.html('')
+        else
+            tokens = text.split('.')
+            working_items = [[window, 'window']]
+            for token in tokens[0...tokens.length-1]
+                token = token.replace('(','').replace(')','')
+                if token.length > 0
+                    working_items.push([working_items[working_items.length-1][0][token], token])
 
-        match_list = []
-        to_match = new RegExp('^' + tokens[tokens.length-1])
-        for attribute, value of working_items[working_items.length-1][0]
-            matches = to_match.exec(attribute)
-            if matches?.length > 0
-                match_list.push([attribute, typeof value])
-        match_list.sort()
+            match_list = []
+            to_match = new RegExp('^' + tokens[tokens.length-1])
+            for attribute, value of working_items[working_items.length-1][0]
+                matches = to_match.exec(attribute)
+                if matches?.length > 0
+                    match_list.push([attribute, typeof value])
+            match_list.sort()
 
-        list = ''
-        list += item[1] + '.' for item in working_items
-        html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>#{ list }</li>"
-        html += "<li style='color:#{ result_styles[item[1]].color }'>#{ item[0] }</li>" for item in match_list
-        $els.CTAutocomplete.html(html)
+            list = ''
+            list += item[1] + '.' for item in working_items
+            html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>#{ list }</li>"
+            html += "<li style='color:#{ result_styles[item[1]].color }'>#{ item[0] }</li>" for item in match_list
+            $els.CTAutocomplete.html(html)
 
 
 
@@ -208,63 +219,66 @@ class CoffeeTable
             execHistory()
 
     execute = (source) ->
-        if history.source.length is 0
-            $els.CTHistory.empty()
-        history_index = -1
-        history.source.push(source)
+        if source is 'localStorage.clear()'
+            clearHistory()
+        else
+            if history.source.length is 0
+                $els.CTHistory.empty()
+            history_index = -1
+            history.source.push(source)
 
-        error_output = null
-        cs_error = false
-        js_error = false
+            error_output = null
+            cs_error = false
+            js_error = false
 
-        try
-            js = CoffeeScript.compile(source, { bare: on })
-        catch error
-            cs_error = true
-            error_output = error
-        
-        if not error_output?
             try
-                result = eval(js)
-            catch eval_error
-                js_error = true
-                error_output = eval_error
+                js = CoffeeScript.compile(source, { bare: on })
+            catch error
+                cs_error = true
+                error_output = error
+            
+            if not error_output?
+                try
+                    result = eval(js)
+                catch eval_error
+                    js_error = true
+                    error_output = eval_error
 
-        if error_output?
-            result = error_output
+            if error_output?
+                result = error_output
 
-        history.result.push(result)
-        this_result_index = history.source.length - 1
+            history.result.push(result)
+            this_result_index = history.source.length - 1
 
-        new_li = $("<li>#{ this_result_index }: <span>#{ result }</span></li>")
-        new_li.css(styles.li)
-        new_li.find('span').css(result_styles[typeof result])
+            new_li = $("<li>#{ this_result_index }: <span class='CTResultName'>#{ result }</span><span class='CTResultLoad'>src</span></li>")
+            new_li.css(styles.li)
+            new_li.find('span.CTResultName').css(result_styles[typeof result])
 
-        if cs_error
-            new_li.css('color','orange')
-        else if js_error
-            new_li.css('color','red')
-        
-        new_li.hover ->
-            new_li.css
-                background          : 'rgba(255,255,0,0.2)'
-                'list-style-type'   : 'disc'
-        , ->
-            new_li.css
-                'background'        : ''
-                'list-style-type'   : ''
-        
-        new_li.click ->
-            loadPrevious(false, this_result_index)
-            $els.textarea.focus()
-        new_li.mousedown ->
-            new_li.css('background': 'rgba(255,255,0,0.8)')
-        new_li.mouseup ->
-            new_li.css('background': 'rgba(255,255,0,0.2)')
+            if cs_error
+                new_li.css('color','orange')
+            else if js_error
+                new_li.css('color','red')
+            
+            new_li.hover ->
+                new_li.css
+                    background          : 'rgba(255,255,0,0.2)'
+                    'list-style-type'   : 'disc'
+            , ->
+                new_li.css
+                    'background'        : ''
+                    'list-style-type'   : ''
+            
+            new_li.click ->
+                loadPrevious(false, this_result_index)
+                $els.textarea.focus()
+            new_li.mousedown ->
+                new_li.css('background': 'rgba(255,255,0,0.8)')
+            new_li.mouseup ->
+                new_li.css('background': 'rgba(255,255,0,0.2)')
 
-        new_li.prependTo($els.CTHistory)
-        $els.span.show()
-        localStorage?.setItem(settings.ls_key, JSON.stringify(history.source))
+            new_li.prependTo($els.CTHistory)
+            $els.span.show()
+            localStorage?.setItem(settings.ls_key, JSON.stringify(history.source))
 
 
     clearHistory = ->
@@ -306,9 +320,12 @@ class CoffeeTable
         if settings.multi_line
             new_height = '4em'
             instruction = 'type CoffeeScript, press shift+enter'
+            $els.CTAutocomplete.hide()
         else
             new_height = styles.textarea.height
             instruction = 'type CoffeeScript, press enter'
+            if settings.auto_suggest
+                $els.CTAutocomplete.show()
         $els.textarea.css('height',new_height).focus()
         if history.source.length is 0
             $els.CTHistory.find('li').text(instruction)
@@ -328,7 +345,6 @@ class CoffeeTable
             input           : widget.find('input')
             p               : widget.find('p')
             li              : widget.find('li')
-            autocomplete    : widget.find('autocomplete')
         for el_name, el of $els
             el.css(styles[el_name]) 
         appendInstructions()
@@ -374,11 +390,11 @@ class CoffeeTable
                 @value = @value.substring(0,start) + settings.indent + @value.substring(start)
                 @selectionStart = start + 4
                 @selectionEnd = start + 4
-
+            
         $els.textarea.bind 'keyup', (e) ->
             entered_source = $els.textarea.val()
             if not settings.multi_line and settings.auto_suggest
-                getAutocomplete(entered_source)
+                getAutocomplete(entered_source, e)
 
         if settings.multi_line
             $els.input.click()
@@ -390,6 +406,10 @@ class CoffeeTable
     
     hide: ->
         $els.widget.hide()
+        return this
+    
+    clear: ->
+        clearHistory()
         return this
 
 init = ->

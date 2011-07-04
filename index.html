@@ -11,7 +11,7 @@
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
     <script src="lib/coffee_script-1.1.1-min.js" type="text/javascript"></script>
-    <script src="coffeetable-min.js" type="text/javascript"></script>
+    <script src="coffeetable.js" type="text/javascript"></script>
 
     <link href="http://fonts.googleapis.com/css?family=Molengo&amp;subset=latin" rel="stylesheet" type="text/css">
     <link rel="icon" href="http://alecperkins.net/favicon.png" type="image/png">
@@ -47,12 +47,14 @@
         <li><a href="http://jquery.com/">jQuery</a></li> 
         <li><a href="http://coffeescript.org">coffee_script.js</a> (loaded automatically if not already present)</li> 
     </ul>
-    
+
     <h2>To use</h2> 
     <p>Load <code>coffeetable-min.js</code> into the page:</p> 
     <pre><code>&lt;script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"&gt;&lt;/script&gt;
     </code></pre> 
-    <p>Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press <code>enter</code> to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use <code>shift</code>+<code>enter</code> instead to execute code. <code>log</code> and <code>dir</code> are shortcuts to the <code>console</code> functions. <code>this</code> is the <code>window</code> object. Use <code>@foo = bar</code> to make a variable global. It will then be accessible in subsequent entries. If localStorage is supported, CoffeeTable uses it to persist the history, and then replay it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p> 
+    <p>Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press <code>enter</code> to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use <code>shift</code>+<code>enter</code> instead to execute code. <code>log</code> and <code>dir</code> are shortcuts to the <code>console</code> functions. <code>this</code> is the <code>window</code> object. Use <code>@foo = bar</code> to make a variable global. It will then be accessible in subsequent entries.</p>
+    <p>If localStorage is supported, CoffeeTable uses it to persist the history, and then <em>replay</em> it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.
+    <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.</p> 
  
     <h3>Output color coding</h3> 
  
