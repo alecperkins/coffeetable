@@ -4,9 +4,9 @@
   
   A drop-in workbench for experimentation.
   http://github.com/alecperkins/coffeetable
-  */  var CoffeeTable, default_settings;
+  */  var CoffeeTable, default_settings, init;
   default_settings = {
-    coffeescript_js: "https://raw.github.com/alecperkins/coffeetable/master/lib/coffee_script-1.1.1-min.js",
+    coffeescript_js: 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js',
     style: {
       position: 'fixed',
       top: '5px',
@@ -14,7 +14,9 @@
     },
     local_storage: true,
     ls_key: 'coffee-table',
-    multi_line: false
+    multi_line: false,
+    indent: '    ',
+    auto_suggest: true
   };
     if (typeof console !== "undefined" && console !== null) {
     console;
@@ -31,7 +33,7 @@
     return console.dir(arguments);
   };
   CoffeeTable = (function() {
-    var $els, active, appendInstructions, autocomplete_items, autocomplete_query, clearHistory, execute, getAutocomplete, history, history_index, loadCSJS, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
+    var $els, active, appendInstructions, clearHistory, execute, getAutocomplete, history, history_index, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
     settings = null;
     $els = null;
     styles = null;
@@ -92,7 +94,8 @@
           'padding': '4px 4px 4px 16px',
           'font-family': 'monospace',
           'list-style-type': 'circle',
-          'overflow-y': 'scroll'
+          'overflow-y': 'scroll',
+          'max-height': "" + (window.innerHeight - 140) + "px"
         },
         li: {
           'padding': '4px 4px 4px 4px',
@@ -131,13 +134,13 @@
         },
         CTAutocomplete: {
           'position': 'absolute',
-          'top': '0',
-          'left': '-250px',
+          'top': '-14px',
+          'left': '-300px',
           'display': 'block',
-          'background': 'rgba(255,255,255,0.8)',
+          'background': 'rgba(255,255,255,0.9)',
           'box-shadow': '0px 0px 4px #222',
-          'width': '200px',
-          'max-height': '800px',
+          'width': '250px',
+          'max-height': "" + (window.innerHeight - 140) + "px",
           'overflow-y': 'scroll'
         }
       };
@@ -161,95 +164,54 @@
         }
       };
       template = "            <div>                <button>CoffeeTable</button>                <span>clear</span>                <a href='https://github.com/alecperkins/coffeetable' target='_blank'>?</a>                <p>multiline <input type='checkbox'></p>                <div>                    <textarea></textarea>                    <ul class='CTAutocomplete'></ul>                    <ul class='CTHistory'></ul>                </div>            </div>        ";
-      loadCSJS();
       renderWidget();
       if (settings.local_storage) {
         loadFromStorage();
       }
     }
-    autocomplete_items = [[window, 'window']];
-    autocomplete_query = '';
-    getAutocomplete = function(e, text) {
-      var attribute, character, html, item, match_list, matches, pop_token, push_token, to_match, value, _i, _len, _ref, _ref2, _ref3;
-      push_token = pop_token = false;
-      character = null;
-      if (text.length === 0) {
-        autocomplete_query = '';
-      }
-      if (e.which === 8) {
-        if (autocomplete_query.length > 0) {
-          autocomplete_query = autocomplete_query.slice(0, autocomplete_query.length - 1);
-        } else {
-          if (autocomplete_items.length > 1) {
-            autocomplete_query = autocomplete_items.pop()[1];
-          } else {
-            autocomplete_query = '';
-          }
-        }
-        console.log;
-      } else {
-        if ((65 <= (_ref = e.which) && _ref <= 90) || (48 <= (_ref2 = e.which) && _ref2 <= 57)) {
-          character = String.fromCharCode(e.which);
-          if (!e.shiftKey) {
-            character = character.toLowerCase();
-          } else {
-            if (e.which === 57) {
-              character = '(';
-              pop_token = true;
-            } else if (e.which === 48) {
-              character = ')';
-              pop_token = true;
-            } else if (e.which === 52) {
-              character = '$';
-            }
-          }
-        } else if (e.which === 190) {
-          character = '.';
-          push_token = true;
-        } else if (e.which === 32) {
-          character = ' ';
-          pop_token = true;
-        } else if (e.which === 13) {
-          pop_token = true;
-        }
-        if (push_token || pop_token) {
-          if (autocomplete_query.length > 0) {
-            if (push_token) {
-              autocomplete_items.push([autocomplete_items[autocomplete_items.length - 1][autocomplete_query], autocomplete_query]);
-            } else {
-              autocomplete_items = [[window, 'window']];
-            }
-          }
-          autocomplete_query = '';
-        } else if (character != null) {
-          autocomplete_query += character;
+    window.onresize = function() {
+      var height;
+      height = "" + (window.innerHeight - 140) + "px";
+      $els.CTAutocomplete.css('max-height', height);
+      return $els.CTHistory.css('max-height', height);
+    };
+    getAutocomplete = function(text) {
+      var attribute, html, item, list, match_list, matches, to_match, token, tokens, value, working_items, _i, _j, _k, _len, _len2, _len3, _ref;
+      tokens = text.split('.');
+      working_items = [[window, 'window']];
+      for (_i = 0, _len = tokens.length; _i < _len; _i++) {
+        token = tokens[_i];
+        token = token.replace('(', '').replace(')', '');
+        if (token.length > 0 && (working_items[working_items.length - 1][0][token] != null)) {
+          working_items.push([working_items[working_items.length - 1][0][token], token]);
         }
       }
-      console.log(autocomplete_query);
       match_list = [];
-      to_match = new RegExp('^' + autocomplete_query);
-      _ref3 = autocomplete_items[autocomplete_items.length - 1][0];
-      for (attribute in _ref3) {
-        value = _ref3[attribute];
+      to_match = new RegExp('^' + tokens[tokens.length - 1]);
+      _ref = working_items[working_items.length - 1][0];
+      for (attribute in _ref) {
+        value = _ref[attribute];
         matches = to_match.exec(attribute);
         if ((matches != null ? matches.length : void 0) > 0) {
-          match_list.push(attribute);
+          match_list.push([attribute, typeof value]);
         }
       }
       match_list.sort();
-      html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>" + autocomplete_items[autocomplete_items.length - 1][1] + "</li>";
-      for (_i = 0, _len = match_list.length; _i < _len; _i++) {
-        item = match_list[_i];
-        html += "<li>" + item + "</li>";
+      list = '';
+      for (_j = 0, _len2 = working_items.length; _j < _len2; _j++) {
+        item = working_items[_j];
+        list += item[1] + '.';
       }
-      $els.CTAutocomplete.html(html);
-      if (e.which === 9 && match_list > 0 && autocomplete_query.length > 0) {
-        return console.log(match_list[0].replace(autocomplete_query, ''));
+      html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>" + list + "</li>";
+      for (_k = 0, _len3 = match_list.length; _k < _len3; _k++) {
+        item = match_list[_k];
+        html += "<li style='color:" + result_styles[item[1]].color + "'>" + item[0] + "</li>";
       }
+      return $els.CTAutocomplete.html(html);
     };
     loadFromStorage = function() {
       var execHistory, previous_data;
-      previous_data = typeof localStorage !== "undefined" && localStorage !== null ? localStorage.getItem('coffee-table') : void 0;
+      previous_data = typeof localStorage !== "undefined" && localStorage !== null ? localStorage.getItem(settings.ls_key) : void 0;
       if (previous_data != null) {
         previous_data = JSON.parse(previous_data);
         execHistory = function() {
@@ -339,6 +301,7 @@
       return typeof localStorage !== "undefined" && localStorage !== null ? localStorage.setItem(settings.ls_key, JSON.stringify(history.source)) : void 0;
     };
     clearHistory = function() {
+      var autocomplete_items, autocomplete_query;
       $els.CTHistory.empty();
       history.source = [];
       history.result = [];
@@ -456,33 +419,28 @@
           e.preventDefault();
           if (entered_source !== '') {
             execute(entered_source);
-            $els.textarea.val('');
+            return $els.textarea.val('');
           }
         } else if (e.which === 9) {
           e.preventDefault();
           start = this.selectionStart;
           end = this.selectionEnd;
-          this.value = this.value.substring(0, start) + "    " + this.value.substring(start);
+          this.value = this.value.substring(0, start) + settings.indent + this.value.substring(start);
           this.selectionStart = start + 4;
-          this.selectionEnd = start + 4;
+          return this.selectionEnd = start + 4;
         }
-        if (!settings.multi_line) {
-          return getAutocomplete(e, entered_source);
+      });
+      $els.textarea.bind('keyup', function(e) {
+        var entered_source;
+        entered_source = $els.textarea.val();
+        if (!settings.multi_line && settings.auto_suggest) {
+          return getAutocomplete(entered_source);
         }
       });
       if (settings.multi_line) {
         $els.input.click();
       }
       return widget.appendTo('body');
-    };
-    loadCSJS = function() {
-      var script_el;
-      if (!(window.CoffeeScript != null)) {
-        script_el = document.createElement('script');
-        script_el.type = 'application/javascript';
-        script_el.src = default_settings.coffeescript_js;
-        return $('head').append(script_el);
-      }
     };
     CoffeeTable.prototype.show = function() {
       $els.widget.show();
@@ -494,8 +452,22 @@
     };
     return CoffeeTable;
   })();
-  window.CoffeeTable = CoffeeTable;
-  $(document).ready(function() {
+  init = function() {
     return window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings);
+  };
+  $(document).ready(function() {
+    var script_el;
+    window.CoffeeTable = CoffeeTable;
+    if (!(window.CoffeeScript != null)) {
+      script_el = document.createElement('script');
+      script_el.type = 'application/javascript';
+      script_el.src = default_settings.coffeescript_js;
+      $(script_el).bind('load', function(e) {
+        return init();
+      });
+      return $('head').append(script_el);
+    } else {
+      return init();
+    }
   });
 }).call(this);

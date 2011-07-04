@@ -6,7 +6,7 @@ http://github.com/alecperkins/coffeetable
 ###
 
 default_settings =
-    coffeescript_js : "https://raw.github.com/alecperkins/coffeetable/master/lib/coffee_script-1.1.1-min.js"
+    coffeescript_js : 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js'
     style:
       position          : 'fixed'
       top               : '5px'
@@ -14,6 +14,8 @@ default_settings =
     local_storage   : true
     ls_key          : 'coffee-table'
     multi_line      : false
+    indent          : '    '
+    auto_suggest    : true
 
 # Trap calls to console.log and console.dir if the console doesn't exist.
 # Lookin' at you, IE.
@@ -24,10 +26,11 @@ console ?=
 window.log = -> console.log arguments
 window.dir = -> console.dir arguments
 
+
+
 class CoffeeTable
     settings = null
     $els = null
-
     styles = null
     result_styles = null
     template = ''
@@ -82,6 +85,7 @@ class CoffeeTable
                 'font-family'       : 'monospace'
                 'list-style-type'   : 'circle'
                 'overflow-y'        : 'scroll'
+                'max-height'        : "#{ window.innerHeight - 140 }px"
             li:
                 'padding'           : '4px 4px 4px 4px'
                 'cursor'            : 'pointer'
@@ -114,13 +118,13 @@ class CoffeeTable
                 'text-align'        : 'right'
             CTAutocomplete:
                 'position'          : 'absolute'
-                'top'               : '0'
-                'left'              : '-250px'
+                'top'               : '-14px'
+                'left'              : '-300px'
                 'display'           : 'block'
-                'background'        : 'rgba(255,255,255,0.8)'
+                'background'        : 'rgba(255,255,255,0.9)'
                 'box-shadow'        : '0px 0px 4px #222'
-                'width'             : '200px'
-                'max-height'        : '800px'
+                'width'             : '250px'
+                'max-height'        : "#{ window.innerHeight - 140 }px"
                 'overflow-y'        : 'scroll'
 
 
@@ -152,94 +156,44 @@ class CoffeeTable
             </div>
         "
 
-        loadCSJS()
         renderWidget()
 
         if settings.local_storage
             loadFromStorage()
 
-    autocomplete_items = [[window,'window']]
-    autocomplete_query = ''
-    getAutocomplete = (e, text) ->
-        # numbers: 48..57
-        # letters: 65..90
-        # space: 32
-        # period: 190
-        # (: 57 + shiftKey
-        # ): 48 + shiftKey
+    window.onresize = ->
+        height = "#{ window.innerHeight - 140 }px"
+        $els.CTAutocomplete.css('max-height',height)
+        $els.CTHistory.css('max-height',height)
 
-        # in numbers
-        push_token = pop_token = false
-        character = null
-        # console.log e.which
-        if text.length is 0
-            autocomplete_query = ''
-
-        if e.which is 8 # backspace
-            if autocomplete_query.length > 0
-                autocomplete_query = autocomplete_query[0...autocomplete_query.length-1]
-            else
-                if autocomplete_items.length > 1
-                    autocomplete_query = autocomplete_items.pop()[1]
-                else
-                    autocomplete_query = ''
-                
-            console.log 
-        else
-            if 65 <= e.which <= 90 or 48 <= e.which <= 57
-                character = String.fromCharCode(e.which)
-                if not e.shiftKey
-                    character = character.toLowerCase()
-                else
-                    if e.which is 57
-                        character = '('
-                        pop_token = true
-                    else if e.which is 48
-                        character = ')'
-                        pop_token = true
-                    else if e.which is 52
-                        character = '$'
-            else if e.which is 190
-                character = '.'
-                push_token = true
-            else if e.which is 32
-                character = ' '
-                pop_token = true
-            else if e.which is 13   # enter
-                pop_token = true
-            
-            if push_token or pop_token
-                if autocomplete_query.length > 0
-                    if push_token
-                        autocomplete_items.push([autocomplete_items[autocomplete_items.length-1][autocomplete_query], autocomplete_query])
-                    else
-                        autocomplete_items = [[window,'window']]
-                autocomplete_query = ''
-            else if character?
-                autocomplete_query += character
+    getAutocomplete = (text) ->
+        tokens = text.split('.')
+        working_items = [[window, 'window']]
+        for token in tokens
+            token = token.replace('(','').replace(')','')
+            if token.length > 0 and working_items[working_items.length-1][0][token]?
+                working_items.push([working_items[working_items.length-1][0][token], token])
         
-        console.log autocomplete_query
+        # abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$_
 
         match_list = []
-        to_match = new RegExp('^' + autocomplete_query)
-        for attribute, value of autocomplete_items[autocomplete_items.length-1][0]
+        to_match = new RegExp('^' + tokens[tokens.length-1])
+        for attribute, value of working_items[working_items.length-1][0]
             matches = to_match.exec(attribute)
             if matches?.length > 0
-                match_list.push(attribute)
-        
+                match_list.push([attribute, typeof value])
         match_list.sort()
-        html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>#{ autocomplete_items[autocomplete_items.length-1][1] }</li>"
-        html += "<li>#{ item }</li>" for item in match_list
-        $els.CTAutocomplete.html(html)
 
-        if e.which is 9 and match_list > 0 and autocomplete_query.length > 0
-            console.log match_list[0].replace(autocomplete_query, '')
-        
+        list = ''
+        list += item[1] + '.' for item in working_items
+        html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>#{ list }</li>"
+        html += "<li style='color:#{ result_styles[item[1]].color }'>#{ item[0] }</li>" for item in match_list
+        $els.CTAutocomplete.html(html)
 
 
 
     loadFromStorage = ->
-        previous_data = localStorage?.getItem('coffee-table')
+        previous_data = localStorage?.getItem(settings.ls_key)
         if previous_data?
             previous_data = JSON.parse(previous_data)
             
@@ -329,7 +283,7 @@ class CoffeeTable
             'list-style-type'   : 'none'
             'text-align'        : 'center'
         instructions.appendTo($els.CTHistory)
-        
+
 
     loadPrevious = (forward=false, target_index) ->
         if target_index?
@@ -412,27 +366,24 @@ class CoffeeTable
                 if entered_source isnt ''
                     execute(entered_source)
                     $els.textarea.val('')
-            else if e.which is 9 #tab
+            else if e.which is 9
+                # tab, insert an indent when tab is pressed
                 e.preventDefault()
                 start = @selectionStart
                 end = @selectionEnd
-                @value = @value.substring(0,start) + "    " + @value.substring(start)
+                @value = @value.substring(0,start) + settings.indent + @value.substring(start)
                 @selectionStart = start + 4
                 @selectionEnd = start + 4
-            if not settings.multi_line
-                getAutocomplete(e, entered_source)
+
+        $els.textarea.bind 'keyup', (e) ->
+            entered_source = $els.textarea.val()
+            if not settings.multi_line and settings.auto_suggest
+                getAutocomplete(entered_source)
 
         if settings.multi_line
             $els.input.click()
         widget.appendTo('body')
 
-    loadCSJS = ->
-        if not window.CoffeeScript?
-            script_el = document.createElement('script')
-            script_el.type ='application/javascript'
-            script_el.src = default_settings.coffeescript_js
-            $('head').append(script_el)
-    
     show: ->
         $els.widget.show()
         return this
@@ -441,7 +392,17 @@ class CoffeeTable
         $els.widget.hide()
         return this
 
-window.CoffeeTable = CoffeeTable
+init = ->
+    window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings)
 
 $(document).ready ->
-    window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings)
+    window.CoffeeTable = CoffeeTable
+    if not window.CoffeeScript?
+        script_el = document.createElement('script')
+        script_el.type ='application/javascript'
+        script_el.src = default_settings.coffeescript_js
+        $(script_el).bind 'load', (e) ->
+            init()
+        $('head').append(script_el)
+    else
+        init()
