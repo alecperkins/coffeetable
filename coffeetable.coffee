@@ -34,7 +34,7 @@ defaults =
     autoload_jquery          : true
     # URLs of CoffeeScript and jQuery files to load 
     coffeescript_js : 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js'
-    jquery_js       : 'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js'
+    jquery_js       : 'lib/jquery-1.6.2-min.js'
 
     # Persist the history using localStorage
     local_storage   : true
@@ -70,7 +70,7 @@ window.log ?= -> console.log arguments...
 window.dir ?= -> console.dir arguments...
 
 # Keypress codes, for convenience.
-keycodes =
+keycode =
     UP          : 38
     DOWN        : 40
     ENTER       : 13
@@ -78,8 +78,27 @@ keycodes =
     BACKSPACE   : 8
 
 # Template for widget markup and style.
-# `__ID__` will be replaced by the setting for widget_id.
-template = "<div id='__ID__'><style type='text/css'>#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.9);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:'';content:none}#__ID__ a img{border:none}#__ID__ button{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ button:active{background:#911;color:#fff}#__ID__ textarea{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ div{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ li{padding:4px;cursor:pointer}#__ID__ li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ li:active{background-color:rgba(255,255,0,0.8)}#__ID__ li.cs-error{color:orange}#__ID__ li.js-error{color:red}#__ID__ li.instructions{list-style-type:none;text-align:center}#__ID__ span{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ span:hover{background-color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autocomplete{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-14px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll}#__ID__ .autocomplete li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}</style><button>CoffeeTable</button><span>clear</span><a href='http://code.alecperkins.net/coffeetable/' target='_blank'>?</a><p>multiline <input type='checkbox'></p><div><textarea></textarea><ul class='autocomplete'></ul><ul class='history'></ul></div></div>"
+# `__ID__` will be replaced by the setting for widget_id. This ID is used for
+# scoping the CSS rules to avoid conflicts with the existing page styles.
+# See `resources/template.html` and `resources/style.sass` for the source files.
+template = """
+<div id='__ID__'>
+    <style type='text/css'>
+        #__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.9);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:"";content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ li{padding:4px;cursor:pointer}#__ID__ li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ li:active{background-color:rgba(255,255,0,0.8)}#__ID__ li.cs-error{color:orange}#__ID__ li.js-error{color:red}#__ID__ li.instructions{list-style-type:none;text-align:center}#__ID__ .clear{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autocomplete{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-14px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll}#__ID__ .autocomplete li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}
+
+    </style>
+    <button class='toggle-widget'>CoffeeTable</button>
+    <span class='clear'>clear</span>
+    <a href='http://code.alecperkins.net/coffeetable/' target='_blank'>?</a>
+    <p>multiline <input type='checkbox'></p>
+    <div class='input'>
+        <textarea class='coffee-source'></textarea>
+        <ul class='autocomplete'></ul>
+        <ul class='history'></ul>
+    </div>
+</div>
+
+"""
 
 # Initialize variables so they're visible to all internal functions.
 $ = null
@@ -90,6 +109,7 @@ $els = null
 active = false
 deferred = false
 loaded = false
+showing_multi_line = false
 history_index = 0
 loaded_scripts =
     jquery_js       : false
@@ -98,12 +118,12 @@ loaded_scripts =
 
 ###
 Track the input history with a list of objects like this...
-
+`
     {
-      source: 'CoffeeScript',
-      result: 'result'
+      source: 'CoffeeScript code',
+      result: 'result of eval'
     }
-
+`
 ...in order of entry by the user.
 ###
 history = []
@@ -122,7 +142,7 @@ init = (opts={}) ->
         $ = window.jQuery
 
         # Apply the ID from settings to the template HTML and CSS.
-        tempate = template.replace(/__ID__/g, settings.widget_id)
+        template = template.replace(/__ID__/g, settings.widget_id)
         renderWidget()
 
         # Load previous history if enabled by settings.
@@ -134,13 +154,13 @@ init = (opts={}) ->
 
 # ### buildAutosuggest
 ###
-Generates the auto-suggest list based on the object represented by the
-supplied text, done by iterating over the objects loaded, starting with
-`window` and progressing through the globals.
+Generate the auto-suggest list based on the object represented by the
+supplied text. Done by iterating over the objects loaded, starting with
+`window` and progressing through the subsequent properties.
 ###
 buildAutosuggest = (text, e) ->
     # If the key is backspace and nothing is shown, clear auto-suggest list.
-    if e.which is keycodes.BACKSPACE and text.length is 0 and $els.autosuggest_list.html().length isnt 0
+    if e.which is keycode.BACKSPACE and text.length is 0 and $els.autosuggest_list.html().length isnt 0
         $els.autosuggest_list.html('')
     else
         # Rudimentary parsing by splitting on the `.` delimiter and using the
@@ -211,7 +231,8 @@ loadFromStorage = ->
             # If data has been persisted, parse the string from localStorage
             # and execute each history item in order.
             previous_data = JSON.parse(previous_data)
-            execute(item.source) for item in previous_data
+            execute(entry_source) for entry_source in previous_data
+
 
 # ### replayHistory
 ###
@@ -256,7 +277,7 @@ execute = (source) ->
         # global context.
         if not error_output?
             try
-                result = $.globalEval(compiled_js)
+                result = eval(compiled_js)
             catch eval_error
                 js_error = true
                 error_output = eval_error
@@ -272,7 +293,7 @@ execute = (source) ->
         
         # Prepare the list item for this history entry.
         this_result_index = history.length - 1
-        new_li = $("<li class=''>#{ this_result_index }: <span class='result-name'>#{ result }</span><span class='result-load'>src</span></li>")
+        new_li = $("<li class=''>#{ this_result_index }: #{ result }</li>")
 
         # Set the appropriate classes if there were an error.
         if js_error
@@ -290,7 +311,8 @@ execute = (source) ->
 
         # If localStorage is supported, save the current history to the key
         # specified by settings.
-        localStorage?.setItem(settings.ls_key, JSON.stringify(history))
+        entry_sources = (entry.source for entry in history)
+        localStorage?.setItem(settings.ls_key, JSON.stringify(entry_sources))
 
         $els.clear_history.show()
 
@@ -342,8 +364,8 @@ loadPrevious = (forward=false, target_index) ->
         history_index = target_index + 1 
 
     # Currently not "inside" the history, so start at the most recent entry.
-    if history_index is -1
-        history_index = history.source.length-1
+    if history_index is -1 or history_index is 0
+        history_index = history.length - 1
     else
         if forward
             history_index += 1
@@ -352,12 +374,13 @@ loadPrevious = (forward=false, target_index) ->
     
     # If the selected index is "inside" the history list (eg -1), load the
     # entry at that index.
-    if history.length >= 0
+    if history.length > 0
         $els.textarea.val(history[history_index].source)
         # Keep the cursor at the start of the textarea, so the user can
         # continue to step through using the arrows.
         $els.textarea.selectionStart = 0
         $els.textarea.selectionEnd = 0
+
 
 # ### toggleMultiline
 ###
@@ -365,10 +388,10 @@ Switch between single-line and multi-line modes, disabling auto-suggest if in
 multi-line mode.
 ###
 toggleMultiLine = ->
-    settings.multi_line = not settings.multi_line
+    showing_multi_line = not showing_multi_line
 
     # Set height to larger and hide auto-suggest...
-    if settings.multi_line
+    if showing_multi_line
         new_height = '4em'
         $els.autosuggest_list.hide()
     # ...or reset height and show auto-suggest, if enabled.
@@ -395,7 +418,7 @@ renderWidget = ->
         widget              : widget
         textarea            : widget.find('textarea')
         autosuggest_list    : widget.find('ul.autosuggest')
-        history_list        : widget.find('ul.history_list')
+        history_list        : widget.find('ul.history')
         button              : widget.find('button')
         div                 : widget.find('div')
         clear_history       : widget.find('span')
@@ -404,8 +427,7 @@ renderWidget = ->
         p                   : widget.find('p')
         li                  : widget.find('li')
 
-    # Apply these styles programmatically so they can be customized in
-    # settings.
+    # Apply these styles programmatically so they can be customized in settings.
     $els.widget.css
         'position'          : "#{ settings.widget_position }"
         'top'               : "#{ settings.widget_top }"
@@ -497,14 +519,25 @@ bindEvents = ->
 # ## Export the API
 
 CoffeeTable =
-    show                : -> $els.widget.show()
-    hide                : -> $els.widget.hide()
-    clear               : -> clearHistory()
-    replay              : -> replayHistory()
-    deferInit           : -> deferred = true # prevent CoffeeTable from initializing automatically
+    show                : ->
+        $els.widget.show()
+        return this
+    hide                : ->
+        $els.widget.hide()
+        return this
+    clear               : ->
+        clearHistory()
+        return this
+    replay              : ->
+        replayHistory()
+        return this
+    deferInit           : ->
+        deferred = true
+        return this
     init                : (opts) ->
         setSettings(opts)
         preInit()
+        return this
 
 window.CoffeeTable = CoffeeTable
 
@@ -536,7 +569,7 @@ loadScript = (script_name) ->
     script.async = true
     script.onload = ->
         loaded_scripts[script_name] = true
-        preInit()
+        init()
     head.appendChild(script)
 
 
@@ -545,19 +578,24 @@ loadScript = (script_name) ->
 Helper for prepping settings and checking if dependencies are loaded.
 ###
 preInit = ->
+    # Check if jQuery and CoffeeScript have already been loaded.
     loaded_scripts.jquery_js = window.jQuery?
     loaded_scripts.coffeescript_js = window.CoffeeScript?
-    if not loaded.coffeescript_js
+
+    # If the scripts haven't been loaded, load them, or throw an error if
+    # loading is disabled in settings.
+    if not loaded_scripts.jquery_js
         if not settings.autoload_coffee_script
             throw 'CoffeeTable requires coffee_script.js'
         else
             loadScript('coffeescript_js')
-    if not loaded.jquery_js
+    if not loaded_scripts.coffeescript_js
         if not settings.autoload_jquery
             throw 'CoffeeTable requires jQuery'
         else
             loadScript('jquery_js')
 
+    # Try init here (in case the scripts are already loaded).
     init()
 
 
@@ -571,3 +609,4 @@ document.addEventListener('DOMContentLoaded', ->
         setSettings()
         preInit()
 , false)
+

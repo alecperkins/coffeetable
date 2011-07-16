@@ -22,12 +22,12 @@
   
   _Note: the replaying of history, either on widget reload or on demand, can be
   dependent on the overall state of the page, and may not be idempotent._
-  */  var $, $els, CoffeeTable, active, appendInstructions, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycodes, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderWidget, replayHistory, setSettings, settings, template, toggleMultiLine, _ref, _ref2;
+  */  var $, $els, CoffeeTable, active, appendInstructions, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderWidget, replayHistory, setSettings, settings, showing_multi_line, template, toggleMultiLine, _ref, _ref2;
   defaults = {
     autoload_coffee_script: true,
     autoload_jquery: true,
     coffeescript_js: 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js',
-    jquery_js: 'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js',
+    jquery_js: 'lib/jquery-1.6.2-min.js',
     local_storage: true,
     ls_key: 'coffee-table',
     clear_on_load: false,
@@ -61,20 +61,21 @@
       return console.dir.apply(console, arguments);
     };
   };
-  keycodes = {
+  keycode = {
     UP: 38,
     DOWN: 40,
     ENTER: 13,
     TAB: 9,
     BACKSPACE: 8
   };
-  template = "<div id='__ID__'><style type='text/css'>#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.9);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:'';content:none}#__ID__ a img{border:none}#__ID__ button{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ button:active{background:#911;color:#fff}#__ID__ textarea{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ div{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ li{padding:4px;cursor:pointer}#__ID__ li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ li:active{background-color:rgba(255,255,0,0.8)}#__ID__ li.cs-error{color:orange}#__ID__ li.js-error{color:red}#__ID__ li.instructions{list-style-type:none;text-align:center}#__ID__ span{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ span:hover{background-color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autocomplete{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-14px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll}#__ID__ .autocomplete li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}</style><button>CoffeeTable</button><span>clear</span><a href='http://code.alecperkins.net/coffeetable/' target='_blank'>?</a><p>multiline <input type='checkbox'></p><div><textarea></textarea><ul class='autocomplete'></ul><ul class='history'></ul></div></div>";
+  template = "<div id='__ID__'>\n    <style type='text/css'>\n        #__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.9);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:\"\";content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ li{padding:4px;cursor:pointer}#__ID__ li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ li:active{background-color:rgba(255,255,0,0.8)}#__ID__ li.cs-error{color:orange}#__ID__ li.js-error{color:red}#__ID__ li.instructions{list-style-type:none;text-align:center}#__ID__ .clear{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autocomplete{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-14px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll}#__ID__ .autocomplete li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}\n\n    </style>\n    <button class='toggle-widget'>CoffeeTable</button>\n    <span class='clear'>clear</span>\n    <a href='http://code.alecperkins.net/coffeetable/' target='_blank'>?</a>\n    <p>multiline <input type='checkbox'></p>\n    <div class='input'>\n        <textarea class='coffee-source'></textarea>\n        <ul class='autocomplete'></ul>\n        <ul class='history'></ul>\n    </div>\n</div>\n";
   $ = null;
   settings = null;
   $els = null;
   active = false;
   deferred = false;
   loaded = false;
+  showing_multi_line = false;
   history_index = 0;
   loaded_scripts = {
     jquery_js: false,
@@ -82,12 +83,12 @@
   };
   /*
   Track the input history with a list of objects like this...
-  
+  `
       {
-        source: 'CoffeeScript',
-        result: 'result'
+        source: 'CoffeeScript code',
+        result: 'result of eval'
       }
-  
+  `
   ...in order of entry by the user.
   */
   history = [];
@@ -96,13 +97,12 @@
   previous history from localStorage.
   */
   init = function(opts) {
-    var tempate;
     if (opts == null) {
       opts = {};
     }
     if (loaded_scripts.jquery_js && loaded_scripts.coffeescript_js) {
       $ = window.jQuery;
-      tempate = template.replace(/__ID__/g, settings.widget_id);
+      template = template.replace(/__ID__/g, settings.widget_id);
       renderWidget();
       if (settings.local_storage) {
         loadFromStorage();
@@ -111,13 +111,13 @@
     }
   };
   /*
-  Generates the auto-suggest list based on the object represented by the
-  supplied text, done by iterating over the objects loaded, starting with
-  `window` and progressing through the globals.
+  Generate the auto-suggest list based on the object represented by the
+  supplied text. Done by iterating over the objects loaded, starting with
+  `window` and progressing through the subsequent properties.
   */
   buildAutosuggest = function(text, e) {
     var attribute, match_list, matches, to_match, token, tokens, value, working_items, _i, _len, _ref3, _ref4;
-    if (e.which === keycodes.BACKSPACE && text.length === 0 && $els.autosuggest_list.html().length !== 0) {
+    if (e.which === keycode.BACKSPACE && text.length === 0 && $els.autosuggest_list.html().length !== 0) {
       return $els.autosuggest_list.html('');
     } else {
       tokens = text.split('.');
@@ -166,7 +166,7 @@
   Throws an error if called when localStorage is not supported.
   */
   loadFromStorage = function() {
-    var item, previous_data, _i, _len, _results;
+    var entry_source, previous_data, _i, _len, _results;
     if (!(typeof localStorage !== "undefined" && localStorage !== null)) {
       throw 'localStorage not supported by this browser. History will not be persisted';
     } else {
@@ -175,8 +175,8 @@
         previous_data = JSON.parse(previous_data);
         _results = [];
         for (_i = 0, _len = previous_data.length; _i < _len; _i++) {
-          item = previous_data[_i];
-          _results.push(execute(item.source));
+          entry_source = previous_data[_i];
+          _results.push(execute(entry_source));
         }
         return _results;
       }
@@ -199,7 +199,7 @@
   Compile and evaluate the specified CoffeeScript source string.
   */
   execute = function(source) {
-    var compiled_js, cs_error, error_output, js_error, new_li, result, this_result_index;
+    var compiled_js, cs_error, entry, entry_sources, error_output, js_error, new_li, result, this_result_index;
     if (source === 'localStorage.clear()') {
       return clearHistory();
     } else {
@@ -220,7 +220,7 @@
       }
       if (!(error_output != null)) {
         try {
-          result = $.globalEval(compiled_js);
+          result = eval(compiled_js);
         } catch (eval_error) {
           js_error = true;
           error_output = eval_error;
@@ -234,7 +234,7 @@
         source: source
       });
       this_result_index = history.length - 1;
-      new_li = $("<li class=''>" + this_result_index + ": <span class='result-name'>" + result + "</span><span class='result-load'>src</span></li>");
+      new_li = $("<li class=''>" + this_result_index + ": " + result + "</li>");
       if (js_error) {
         new_li.addClass('js-error');
       } else if (cs_error) {
@@ -245,8 +245,17 @@
         return $els.textarea.focus();
       });
       new_li.prependTo($els.history_list);
+      entry_sources = (function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = history.length; _i < _len; _i++) {
+          entry = history[_i];
+          _results.push(entry.source);
+        }
+        return _results;
+      })();
       if (typeof localStorage !== "undefined" && localStorage !== null) {
-        localStorage.setItem(settings.ls_key, JSON.stringify(history));
+        localStorage.setItem(settings.ls_key, JSON.stringify(entry_sources));
       }
       return $els.clear_history.show();
     }
@@ -291,8 +300,8 @@
     if (target_index != null) {
       history_index = target_index + 1;
     }
-    if (history_index === -1) {
-      history_index = history.source.length - 1;
+    if (history_index === -1 || history_index === 0) {
+      history_index = history.length - 1;
     } else {
       if (forward) {
         history_index += 1;
@@ -300,7 +309,7 @@
         history_index -= 1;
       }
     }
-    if (history.length >= 0) {
+    if (history.length > 0) {
       $els.textarea.val(history[history_index].source);
       $els.textarea.selectionStart = 0;
       return $els.textarea.selectionEnd = 0;
@@ -312,8 +321,8 @@
   */
   toggleMultiLine = function() {
     var new_height;
-    settings.multi_line = !settings.multi_line;
-    if (settings.multi_line) {
+    showing_multi_line = !showing_multi_line;
+    if (showing_multi_line) {
       new_height = '4em';
       $els.autosuggest_list.hide();
     } else {
@@ -337,7 +346,7 @@
       widget: widget,
       textarea: widget.find('textarea'),
       autosuggest_list: widget.find('ul.autosuggest'),
-      history_list: widget.find('ul.history_list'),
+      history_list: widget.find('ul.history'),
       button: widget.find('button'),
       div: widget.find('div'),
       clear_history: widget.find('span'),
@@ -424,23 +433,29 @@
   };
   CoffeeTable = {
     show: function() {
-      return $els.widget.show();
+      $els.widget.show();
+      return this;
     },
     hide: function() {
-      return $els.widget.hide();
+      $els.widget.hide();
+      return this;
     },
     clear: function() {
-      return clearHistory();
+      clearHistory();
+      return this;
     },
     replay: function() {
-      return replayHistory();
+      replayHistory();
+      return this;
     },
     deferInit: function() {
-      return deferred = true;
+      deferred = true;
+      return this;
     },
     init: function(opts) {
       setSettings(opts);
-      return preInit();
+      preInit();
+      return this;
     }
   };
   window.CoffeeTable = CoffeeTable;
@@ -469,7 +484,7 @@
     script.async = true;
     script.onload = function() {
       loaded_scripts[script_name] = true;
-      return preInit();
+      return init();
     };
     return head.appendChild(script);
   };
@@ -479,14 +494,14 @@
   preInit = function() {
     loaded_scripts.jquery_js = window.jQuery != null;
     loaded_scripts.coffeescript_js = window.CoffeeScript != null;
-    if (!loaded.coffeescript_js) {
+    if (!loaded_scripts.jquery_js) {
       if (!settings.autoload_coffee_script) {
         throw 'CoffeeTable requires coffee_script.js';
       } else {
         loadScript('coffeescript_js');
       }
     }
-    if (!loaded.jquery_js) {
+    if (!loaded_scripts.coffeescript_js) {
       if (!settings.autoload_jquery) {
         throw 'CoffeeTable requires jQuery';
       } else {
