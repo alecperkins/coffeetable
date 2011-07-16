@@ -1,24 +1,43 @@
 (function() {
   /*
-  CoffeeTable
+  
+  # CoffeeTable
   
   A drop-in, CoffeeScript-fluent console for web pages.
   
-  See https://github.com/alecperkins/coffeetable for more information, and
-  http://code.alecperkins.net/coffeetable for a working demo.
-  */  var $, CoffeeTable, default_settings, init;
-  default_settings = {
+  * [Demo](http://code.alecperkins.net/coffeetable)
+  * [GitHub repo](https://github.com/alecperkins/coffeetable)
+  
+  To prevent automatic initialization, call `CoffeeTable.deferInit()` before the
+  DOM is ready.
+  
+  If you want to initialize the widget before the document ready event, or after
+  `deferInit`, call `CoffeeTable.init(options)`, where options is an optional
+  hash of settings overrides. You can call `init` any time after CoffeeTable has
+  been loaded onto the page.
+  
+  Only one widget can exist at a time. Calling `init` after the widget has loaded
+  will reinitialize it, using the specified options.
+  
+  
+  _Note: the replaying of history, either on widget reload or on demand, can be
+  dependent on the overall state of the page, and may not be idempotent._
+  */  var $, $els, CoffeeTable, active, appendInstructions, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycodes, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderWidget, replayHistory, setSettings, settings, template, toggleMultiLine, _ref, _ref2;
+  defaults = {
+    autoload_coffee_script: true,
+    autoload_jquery: true,
     coffeescript_js: 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js',
-    style: {
-      position: 'fixed',
-      top: '5px',
-      right: '5px'
-    },
+    jquery_js: 'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js',
     local_storage: true,
     ls_key: 'coffee-table',
+    clear_on_load: false,
     multi_line: false,
     indent: '    ',
-    auto_suggest: true
+    auto_suggest: true,
+    widget_position: 'fixed',
+    widget_top: '5px',
+    widget_right: '5px',
+    widget_id: "CoffeeTable-" + ((new Date()).getTime())
   };
     if (typeof console !== "undefined" && console !== null) {
     console;
@@ -28,470 +47,462 @@
       dir: function() {}
     };
   };
-  window.log = function() {
-    return console.log.apply(console, arguments);
-  };
-  window.dir = function() {
-    return console.dir.apply(console, arguments);
-  };
-  $ = window.jQuery;
-  CoffeeTable = (function() {
-    var $els, active, appendInstructions, clearHistory, execute, getAutocomplete, history, history_index, loadFromStorage, loadPrevious, renderWidget, result_styles, settings, styles, template, toggleMultiLine;
-    settings = null;
-    $els = null;
-    styles = null;
-    result_styles = null;
-    template = '';
-    active = false;
-    history_index = 0;
-    history = {
-      source: [],
-      result: []
+    if ((_ref = window.log) != null) {
+    _ref;
+  } else {
+    window.log = function() {
+      return console.log.apply(console, arguments);
     };
-    function CoffeeTable(opts) {
-      var k, v;
-      if (opts == null) {
-        opts = {};
+  };
+    if ((_ref2 = window.dir) != null) {
+    _ref2;
+  } else {
+    window.dir = function() {
+      return console.dir.apply(console, arguments);
+    };
+  };
+  keycodes = {
+    UP: 38,
+    DOWN: 40,
+    ENTER: 13,
+    TAB: 9,
+    BACKSPACE: 8
+  };
+  template = "<div id='__ID__'><style type='text/css'>#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.9);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:'';content:none}#__ID__ a img{border:none}#__ID__ button{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ button:active{background:#911;color:#fff}#__ID__ textarea{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ div{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ li{padding:4px;cursor:pointer}#__ID__ li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ li:active{background-color:rgba(255,255,0,0.8)}#__ID__ li.cs-error{color:orange}#__ID__ li.js-error{color:red}#__ID__ li.instructions{list-style-type:none;text-align:center}#__ID__ span{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ span:hover{background-color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autocomplete{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-14px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll}#__ID__ .autocomplete li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}</style><button>CoffeeTable</button><span>clear</span><a href='http://code.alecperkins.net/coffeetable/' target='_blank'>?</a><p>multiline <input type='checkbox'></p><div><textarea></textarea><ul class='autocomplete'></ul><ul class='history'></ul></div></div>";
+  $ = null;
+  settings = null;
+  $els = null;
+  active = false;
+  deferred = false;
+  loaded = false;
+  history_index = 0;
+  loaded_scripts = {
+    jquery_js: false,
+    coffeescript_js: false
+  };
+  /*
+  Track the input history with a list of objects like this...
+  
+      {
+        source: 'CoffeeScript',
+        result: 'result'
       }
-      settings = default_settings;
-      for (k in opts) {
-        v = opts[k];
-        settings[k] = v;
-      }
-      styles = {
-        widget: {
-          'position': "" + settings.style.position,
-          'top': "" + settings.style.top,
-          'right': "" + settings.style.right,
-          'background': 'rgba(255,255,255,0.9)',
-          'padding': '0',
-          'border': '2px solid white',
-          'z-index': '9999999',
-          'box-shadow': '0px 0px 4px #222',
-          '-moz-box-shadow': '0px 0px 4px #222',
-          '-webkit-box-shadow': '0px 0px 4px #222',
-          'font-size': '12px',
-          'max-height': '95%',
-          'max-width': '900px'
-        },
-        button: {
-          'float': 'right',
-          'background': 'white',
-          'border': '1px solid #ccc',
-          'color': '#991111',
-          'cursor': 'pointer'
-        },
-        button_active: {
-          'background': '#991111',
-          'color': 'white'
-        },
-        textarea: {
-          'font-family': 'monospace',
-          'font-size': '15px',
-          'min-width': '400px',
-          'height': '22px',
-          'margin': '4px'
-        },
-        div: {
-          'display': 'none'
-        },
-        CTHistory: {
-          'margin': '8px',
-          'padding': '4px 4px 4px 16px',
-          'font-family': 'monospace',
-          'list-style-type': 'circle',
-          'overflow-y': 'scroll',
-          'max-height': "" + (window.innerHeight - 140) + "px"
-        },
-        li: {
-          'padding': '4px 4px 4px 4px',
-          'cursor': 'pointer'
-        },
-        span: {
-          'padding': '4px',
-          'text-align': 'center',
-          'cursor': 'pointer',
-          'float': 'left',
-          'color': '#555',
-          'font-variant': 'small-caps',
-          'display': 'none'
-        },
-        a: {
-          'padding': '4px',
-          'text-align': 'center',
-          'cursor': 'pointer',
-          'float': 'right',
-          'color': '#555',
-          'font-variant': 'small-caps'
-        },
-        input: {
-          'vertical-align': 'middle'
-        },
-        p: {
-          'padding': '4px',
-          'margin': '0',
-          'float': 'right',
-          'display': 'inline-block',
-          'width': '80px',
-          'color': '#555',
-          'font-variant': 'small-caps',
-          'display': 'none',
-          'text-align': 'right'
-        },
-        CTAutocomplete: {
-          'position': 'absolute',
-          'top': '-14px',
-          'left': '-300px',
-          'display': 'block',
-          'background': 'rgba(255,255,255,0.9)',
-          'box-shadow': '0px 0px 4px #222',
-          '-moz-box-shadow': '0px 0px 4px #222',
-          '-webkit-box-shadow': '0px 0px 4px #222',
-          'width': '250px',
-          'max-height': "" + (window.innerHeight - 140) + "px",
-          'overflow-y': 'scroll'
-        }
-      };
-      result_styles = {
-        'function': {
-          'color': '#229922'
-        },
-        'number': {
-          'color': '#222299'
-        },
-        'string': {
-          'color': '#992222'
-        },
-        'undefined': {
-          'color': 'grey',
-          'font-style': 'italic'
-        },
-        'object': {},
-        'boolean': {
-          'color': '#229999'
-        }
-      };
-      template = "            <div>                <button>CoffeeTable</button>                <span>clear</span>                <a href='https://github.com/alecperkins/coffeetable' target='_blank'>?</a>                <p>multiline <input type='checkbox'></p>                <div>                    <textarea></textarea>                    <ul class='CTAutocomplete'></ul>                    <ul class='CTHistory'></ul>                </div>            </div>        ";
+  
+  ...in order of entry by the user.
+  */
+  history = [];
+  /*
+  Loads settings, and initiates the rendering of the widget and loading of
+  previous history from localStorage.
+  */
+  init = function(opts) {
+    var tempate;
+    if (opts == null) {
+      opts = {};
+    }
+    if (loaded_scripts.jquery_js && loaded_scripts.coffeescript_js) {
+      $ = window.jQuery;
+      tempate = template.replace(/__ID__/g, settings.widget_id);
       renderWidget();
       if (settings.local_storage) {
         loadFromStorage();
       }
+      return loaded = true;
     }
-    window.onresize = function() {
-      var height;
-      height = "" + (window.innerHeight - 140) + "px";
-      $els.CTAutocomplete.css('max-height', height);
-      return $els.CTHistory.css('max-height', height);
-    };
-    getAutocomplete = function(text, e) {
-      var attribute, html, item, list, match_list, matches, to_match, token, tokens, value, working_items, _i, _j, _k, _len, _len2, _len3, _ref, _ref2;
-      if (e.which === 8 && text.length === 0 && $els.CTAutocomplete.html().length !== 0) {
-        return $els.CTAutocomplete.html('');
-      } else {
-        tokens = text.split('.');
-        working_items = [[window, 'window']];
-        _ref = tokens.slice(0, tokens.length - 1);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          token = _ref[_i];
-          token = token.replace('(', '').replace(')', '');
-          if (token.length > 0) {
-            working_items.push([working_items[working_items.length - 1][0][token], token]);
-          }
+  };
+  /*
+  Generates the auto-suggest list based on the object represented by the
+  supplied text, done by iterating over the objects loaded, starting with
+  `window` and progressing through the globals.
+  */
+  buildAutosuggest = function(text, e) {
+    var attribute, match_list, matches, to_match, token, tokens, value, working_items, _i, _len, _ref3, _ref4;
+    if (e.which === keycodes.BACKSPACE && text.length === 0 && $els.autosuggest_list.html().length !== 0) {
+      return $els.autosuggest_list.html('');
+    } else {
+      tokens = text.split('.');
+      working_items = [[window, 'window']];
+      _ref3 = tokens.slice(0, tokens.length - 1);
+      for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
+        token = _ref3[_i];
+        token = token.replace('(', '').replace(')', '');
+        if (token.length > 0) {
+          working_items.push([working_items[working_items.length - 1][0][token], token]);
         }
-        match_list = [];
-        to_match = new RegExp('^' + tokens[tokens.length - 1]);
-        _ref2 = working_items[working_items.length - 1][0];
-        for (attribute in _ref2) {
-          value = _ref2[attribute];
-          matches = to_match.exec(attribute);
-          if ((matches != null ? matches.length : void 0) > 0) {
-            match_list.push([attribute, typeof value]);
-          }
-        }
-        match_list.sort();
-        list = '';
-        for (_j = 0, _len2 = working_items.length; _j < _len2; _j++) {
-          item = working_items[_j];
-          list += item[1] + '.';
-        }
-        html = "<li style='font-weight:bold; text-decoration: underline; list-style-type: none'>" + list + "</li>";
-        for (_k = 0, _len3 = match_list.length; _k < _len3; _k++) {
-          item = match_list[_k];
-          html += "<li style='color:" + result_styles[item[1]].color + "'>" + item[0] + "</li>";
-        }
-        return $els.CTAutocomplete.html(html);
       }
-    };
-    loadFromStorage = function() {
-      var execHistory, previous_data;
-      previous_data = typeof localStorage !== "undefined" && localStorage !== null ? localStorage.getItem(settings.ls_key) : void 0;
+      match_list = [];
+      to_match = new RegExp('^' + tokens[tokens.length - 1]);
+      _ref4 = working_items[working_items.length - 1][0];
+      for (attribute in _ref4) {
+        value = _ref4[attribute];
+        matches = to_match.exec(attribute);
+        if ((matches != null ? matches.length : void 0) > 0) {
+          match_list.push([attribute, typeof value]);
+        }
+      }
+      match_list.sort();
+      return renderAutosuggest(working_items, match_list);
+    }
+  };
+  /*
+  Build and show the ul for the auto-suggest matched items.
+  */
+  renderAutosuggest = function(working_items, match_list) {
+    var html, item, list, _i, _j, _len, _len2;
+    list = '';
+    for (_i = 0, _len = working_items.length; _i < _len; _i++) {
+      item = working_items[_i];
+      list += item[1] + '.';
+    }
+    html = "<li class='current-object'>" + list + "</li>";
+    for (_j = 0, _len2 = match_list.length; _j < _len2; _j++) {
+      item = match_list[_j];
+      html += "<li class='item[1]'>" + item[0] + "</li>";
+    }
+    return $els.autosuggest_list.html(html);
+  };
+  /*
+  If localStorage is supported, try loading previous command history.
+  Throws an error if called when localStorage is not supported.
+  */
+  loadFromStorage = function() {
+    var item, previous_data, _i, _len, _results;
+    if (!(typeof localStorage !== "undefined" && localStorage !== null)) {
+      throw 'localStorage not supported by this browser. History will not be persisted';
+    } else {
+      previous_data = localStorage.getItem(settings.ls_key);
       if (previous_data != null) {
         previous_data = JSON.parse(previous_data);
-        execHistory = function() {
-          var item, _i, _len, _results;
-          if (typeof CoffeeScript !== "undefined" && CoffeeScript !== null) {
-            _results = [];
-            for (_i = 0, _len = previous_data.length; _i < _len; _i++) {
-              item = previous_data[_i];
-              _results.push(execute(item));
-            }
-            return _results;
-          } else {
-            return setTimeout(function() {
-              return execHistory();
-            }, 500);
-          }
-        };
-        return execHistory();
-      }
-    };
-    execute = function(source) {
-      var cs_error, error_output, js, js_error, new_li, result, this_result_index;
-      if (source === 'localStorage.clear()') {
-        return clearHistory();
-      } else {
-        if (history.source.length === 0) {
-          $els.CTHistory.empty();
+        _results = [];
+        for (_i = 0, _len = previous_data.length; _i < _len; _i++) {
+          item = previous_data[_i];
+          _results.push(execute(item.source));
         }
-        history_index = -1;
-        history.source.push(source);
-        error_output = null;
-        cs_error = false;
-        js_error = false;
-        try {
-          js = CoffeeScript.compile(source, {
-            bare: true
-          });
-        } catch (error) {
-          cs_error = true;
-          error_output = error;
-        }
-        if (!(error_output != null)) {
-          try {
-            result = eval(js);
-          } catch (eval_error) {
-            js_error = true;
-            error_output = eval_error;
-          }
-        }
-        if (error_output != null) {
-          result = error_output;
-        }
-        history.result.push(result);
-        this_result_index = history.source.length - 1;
-        new_li = $("<li>" + this_result_index + ": <span class='CTResultName'>" + result + "</span><span class='CTResultLoad'>src</span></li>");
-        new_li.css(styles.li);
-        new_li.find('span.CTResultName').css(result_styles[typeof result]);
-        if (cs_error) {
-          new_li.css('color', 'orange');
-        } else if (js_error) {
-          new_li.css('color', 'red');
-        }
-        new_li.hover(function() {
-          return new_li.css({
-            background: 'rgba(255,255,0,0.2)',
-            'list-style-type': 'disc'
-          });
-        }, function() {
-          return new_li.css({
-            'background': '',
-            'list-style-type': ''
-          });
-        });
-        new_li.click(function() {
-          loadPrevious(false, this_result_index);
-          return $els.textarea.focus();
-        });
-        new_li.mousedown(function() {
-          return new_li.css({
-            'background': 'rgba(255,255,0,0.8)'
-          });
-        });
-        new_li.mouseup(function() {
-          return new_li.css({
-            'background': 'rgba(255,255,0,0.2)'
-          });
-        });
-        new_li.prependTo($els.CTHistory);
-        $els.span.show();
-        return typeof localStorage !== "undefined" && localStorage !== null ? localStorage.setItem(settings.ls_key, JSON.stringify(history.source)) : void 0;
+        return _results;
       }
-    };
-    clearHistory = function() {
-      var autocomplete_items, autocomplete_query;
-      $els.CTHistory.empty();
-      history.source = [];
-      history.result = [];
-      if (typeof localStorage !== "undefined" && localStorage !== null) {
-        localStorage.removeItem(settings.ls_key);
-      }
-      $els.span.hide();
-      appendInstructions();
-      autocomplete_items = [[window, 'window']];
-      return autocomplete_query = '';
-    };
-    appendInstructions = function() {
-      var instructions;
-      instructions = $('<li>type CoffeeScript, press enter</li>');
-      instructions.css({
-        'list-style-type': 'none',
-        'text-align': 'center'
-      });
-      return instructions.appendTo($els.CTHistory);
-    };
-    loadPrevious = function(forward, target_index) {
-      if (forward == null) {
-        forward = false;
-      }
-      if (target_index != null) {
-        history_index = target_index + 1;
-      }
-      if (history_index === -1) {
-        history_index = history.source.length - 1;
-      } else {
-        if (forward) {
-          history_index += 1;
-        } else {
-          history_index -= 1;
-        }
-      }
-      if (history.source.length > 1) {
-        $els.textarea.val(history.source[history_index]);
-        $els.textarea.selectionStart = 0;
-        return $els.textarea.selectionEnd = 0;
-      }
-    };
-    toggleMultiLine = function() {
-      var instruction, new_height;
-      settings.multi_line = !settings.multi_line;
-      if (settings.multi_line) {
-        new_height = '4em';
-        instruction = 'type CoffeeScript, press shift+enter';
-        $els.CTAutocomplete.hide();
-      } else {
-        new_height = styles.textarea.height;
-        instruction = 'type CoffeeScript, press enter';
-        if (settings.auto_suggest) {
-          $els.CTAutocomplete.show();
-        }
-      }
-      $els.textarea.css('height', new_height).focus();
-      if (history.source.length === 0) {
-        return $els.CTHistory.find('li').text(instruction);
-      }
-    };
-    renderWidget = function() {
-      var el, el_name, widget;
-      widget = $(template);
-      $els = {
-        widget: widget,
-        textarea: widget.find('textarea'),
-        CTAutocomplete: widget.find('ul.CTAutocomplete'),
-        CTHistory: widget.find('ul.CTHistory'),
-        button: widget.find('button'),
-        div: widget.find('div'),
-        span: widget.find('span'),
-        a: widget.find('a'),
-        input: widget.find('input'),
-        p: widget.find('p'),
-        li: widget.find('li')
-      };
-      for (el_name in $els) {
-        el = $els[el_name];
-        el.css(styles[el_name]);
-      }
-      appendInstructions();
-      $els.button.click(function() {
-        if (active) {
-          $els.button.css(styles.button);
-          $els.div.hide();
-          $els.p.hide();
-        } else {
-          $els.button.css(styles.button_active);
-          $els.div.show();
-          $els.p.show();
-          $els.textarea.focus();
-        }
-        return active = !active;
-      });
-      $els.span.click(function() {
-        return clearHistory();
-      });
-      $els.span.hover(function() {
-        return $els.span.css('color', '#991111');
-      }, function() {
-        return $els.span.css('color', styles.span.color);
-      });
-      $els.input.click(function() {
-        return toggleMultiLine();
-      });
-      $els.textarea.bind('keydown', function(e) {
-        var end, entered_source, start;
-        entered_source = $els.textarea.val();
-        if (this.selectionStart === 0) {
-          if (e.which === 38) {
-            loadPrevious();
-          } else if (e.which === 40) {
-            loadPrevious(true);
-          }
-        }
-        if (e.which === 13 && (!settings.multi_line || e.shiftKey)) {
-          e.preventDefault();
-          if (entered_source !== '') {
-            execute(entered_source);
-            return $els.textarea.val('');
-          }
-        } else if (e.which === 9) {
-          e.preventDefault();
-          start = this.selectionStart;
-          end = this.selectionEnd;
-          this.value = this.value.substring(0, start) + settings.indent + this.value.substring(start);
-          this.selectionStart = start + 4;
-          return this.selectionEnd = start + 4;
-        }
-      });
-      $els.textarea.bind('keyup', function(e) {
-        var entered_source;
-        entered_source = $els.textarea.val();
-        if (!settings.multi_line && settings.auto_suggest) {
-          return getAutocomplete(entered_source, e);
-        }
-      });
-      if (settings.multi_line) {
-        $els.input.click();
-      }
-      return widget.appendTo('body');
-    };
-    CoffeeTable.prototype.show = function() {
-      $els.widget.show();
-      return this;
-    };
-    CoffeeTable.prototype.hide = function() {
-      $els.widget.hide();
-      return this;
-    };
-    CoffeeTable.prototype.clear = function() {
-      clearHistory();
-      return this;
-    };
-    return CoffeeTable;
-  })();
-  init = function() {
-    return window.coffeetable_instance = new CoffeeTable(window.coffeetable_settings);
-  };
-  $(document).ready(function() {
-    var script_el;
-    window.CoffeeTable = CoffeeTable;
-    if (!(window.CoffeeScript != null)) {
-      script_el = document.createElement('script');
-      script_el.type = 'application/javascript';
-      script_el.src = default_settings.coffeescript_js;
-      $(script_el).bind('load', function(e) {
-        return init();
-      });
-      return $('head').append(script_el);
-    } else {
-      return init();
     }
-  });
+  };
+  /*
+  Clear the display of the history and excute each item in the history.
+  */
+  replayHistory = function() {
+    var item, _i, _len, _results;
+    $els.history_list.empty();
+    _results = [];
+    for (_i = 0, _len = history.length; _i < _len; _i++) {
+      item = history[_i];
+      _results.push(execute(item.source));
+    }
+    return _results;
+  };
+  /*
+  Compile and evaluate the specified CoffeeScript source string.
+  */
+  execute = function(source) {
+    var compiled_js, cs_error, error_output, js_error, new_li, result, this_result_index;
+    if (source === 'localStorage.clear()') {
+      return clearHistory();
+    } else {
+      if (history.length === 0) {
+        $els.history_list.empty();
+      }
+      history_index = -1;
+      error_output = null;
+      cs_error = false;
+      js_error = false;
+      try {
+        compiled_js = CoffeeScript.compile(source, {
+          bare: true
+        });
+      } catch (error) {
+        cs_error = true;
+        error_output = error;
+      }
+      if (!(error_output != null)) {
+        try {
+          result = $.globalEval(compiled_js);
+        } catch (eval_error) {
+          js_error = true;
+          error_output = eval_error;
+        }
+      }
+      if (error_output != null) {
+        result = error_output;
+      }
+      history.push({
+        result: result,
+        source: source
+      });
+      this_result_index = history.length - 1;
+      new_li = $("<li class=''>" + this_result_index + ": <span class='result-name'>" + result + "</span><span class='result-load'>src</span></li>");
+      if (js_error) {
+        new_li.addClass('js-error');
+      } else if (cs_error) {
+        new_li.addClass('cs-error');
+      }
+      new_li.click(function() {
+        loadPrevious(false, this_result_index);
+        return $els.textarea.focus();
+      });
+      new_li.prependTo($els.history_list);
+      if (typeof localStorage !== "undefined" && localStorage !== null) {
+        localStorage.setItem(settings.ls_key, JSON.stringify(history));
+      }
+      return $els.clear_history.show();
+    }
+  };
+  /*
+  Empty the history in memory, disk, and page.
+  */
+  clearHistory = function() {
+    var autosuggest, autsuggest_query;
+    $els.history_list.empty();
+    history = [];
+    if (typeof localStorage !== "undefined" && localStorage !== null) {
+      localStorage.removeItem(settings.ls_key);
+    }
+    appendInstructions();
+    autosuggest = [[window, 'window']];
+    autsuggest_query = '';
+    return $els.clear_history.hide();
+  };
+  /*
+  Show instructions for how to use the widget, depending on multi-line setting.
+  */
+  appendInstructions = function() {
+    var instructions;
+    if (settings.multi_line) {
+      instructions = 'type CoffeeScript, press shift+enter';
+    } else {
+      instructions = 'type CoffeeScript, press enter';
+    }
+    instructions = $("<li class='instructions'>" + instructions + "</li>");
+    return instructions.appendTo($els.history_list);
+  };
+  /*
+  Given a history index to load, set the current source input to that entry's
+  source. Supports going either direction through the history; pass `true` for
+  `forward` to move forward in the list.
+  */
+  loadPrevious = function(forward, target_index) {
+    if (forward == null) {
+      forward = false;
+    }
+    if (target_index != null) {
+      history_index = target_index + 1;
+    }
+    if (history_index === -1) {
+      history_index = history.source.length - 1;
+    } else {
+      if (forward) {
+        history_index += 1;
+      } else {
+        history_index -= 1;
+      }
+    }
+    if (history.length >= 0) {
+      $els.textarea.val(history[history_index].source);
+      $els.textarea.selectionStart = 0;
+      return $els.textarea.selectionEnd = 0;
+    }
+  };
+  /*
+  Switch between single-line and multi-line modes, disabling auto-suggest if in
+  multi-line mode.
+  */
+  toggleMultiLine = function() {
+    var new_height;
+    settings.multi_line = !settings.multi_line;
+    if (settings.multi_line) {
+      new_height = '4em';
+      $els.autosuggest_list.hide();
+    } else {
+      new_height = '';
+      if (settings.auto_suggest) {
+        $els.autosuggest_list.show();
+      }
+    }
+    $els.textarea.css('height', new_height).focus();
+    if (history.length > 0) {
+      return appendInstructions();
+    }
+  };
+  /*
+  Build and display the widget elements.
+  */
+  renderWidget = function() {
+    var widget;
+    widget = $(template);
+    $els = {
+      widget: widget,
+      textarea: widget.find('textarea'),
+      autosuggest_list: widget.find('ul.autosuggest'),
+      history_list: widget.find('ul.history_list'),
+      button: widget.find('button'),
+      div: widget.find('div'),
+      clear_history: widget.find('span'),
+      a: widget.find('a'),
+      toggle_multiline: widget.find('input'),
+      p: widget.find('p'),
+      li: widget.find('li')
+    };
+    $els.widget.css({
+      'position': "" + settings.widget_position,
+      'top': "" + settings.widget_top,
+      'right': "" + settings.widget_right
+    });
+    appendInstructions();
+    bindEvents();
+    return widget.appendTo('body');
+  };
+  /*
+  Setup the various events for the control elements.
+  */
+  bindEvents = function() {
+    $els.button.click(function() {
+      if (active) {
+        $els.div.hide();
+        $els.p.hide();
+      } else {
+        $els.div.show();
+        $els.p.show();
+        $els.textarea.focus();
+      }
+      return active = !active;
+    });
+    $els.clear_history.click(function() {
+      return clearHistory();
+    });
+    $els.toggle_multiline.click(function() {
+      return toggleMultiLine();
+    });
+    $els.textarea.bind('keydown', function(e) {
+      var end, entered_source, start;
+      entered_source = $els.textarea.val();
+      if (this.selectionStart === 0) {
+        if (e.which === keycode.UP) {
+          loadPrevious();
+        } else if (e.which === keycode.DOWN) {
+          loadPrevious(true);
+        }
+      }
+      if (e.which === keycode.ENTER && (!settings.multi_line || e.shiftKey)) {
+        e.preventDefault();
+        if (entered_source !== '') {
+          execute(entered_source);
+          return $els.textarea.val('');
+        }
+      } else if (e.which === keycode.TAB) {
+        e.preventDefault();
+        start = this.selectionStart;
+        end = this.selectionEnd;
+        this.value = this.value.substring(0, start) + settings.indent + this.value.substring(start);
+        this.selectionStart = start + settings.indent.length;
+        return this.selectionEnd = start + settings.indent.length;
+      }
+    });
+    $els.textarea.bind('keyup', function(e) {
+      var entered_source;
+      entered_source = $els.textarea.val();
+      if (!settings.multi_line && settings.auto_suggest) {
+        return buildAutosuggest(entered_source, e);
+      }
+    });
+    if (settings.multi_line) {
+      $els.toggle_multiline.click();
+    }
+    return $(window).resize(function() {
+      var height, width;
+      height = "" + (window.innerHeight - 140) + "px";
+      width = "" + (window.innerWidth - 255) + "px";
+      $els.autosuggest_list.css({
+        'max-height': height,
+        'max-width': width
+      });
+      return $els.history_list.css('max-height', height);
+    });
+  };
+  CoffeeTable = {
+    show: function() {
+      return $els.widget.show();
+    },
+    hide: function() {
+      return $els.widget.hide();
+    },
+    clear: function() {
+      return clearHistory();
+    },
+    replay: function() {
+      return replayHistory();
+    },
+    deferInit: function() {
+      return deferred = true;
+    },
+    init: function(opts) {
+      setSettings(opts);
+      return preInit();
+    }
+  };
+  window.CoffeeTable = CoffeeTable;
+  /*
+  Load the default settings and apply user overrides.
+  */
+  setSettings = function(opts) {
+    var key, value, _results;
+    settings = defaults;
+    _results = [];
+    for (key in opts) {
+      value = opts[key];
+      _results.push(settings[key] = value);
+    }
+    return _results;
+  };
+  /*
+  Helper for loading external scripts.
+  */
+  loadScript = function(script_name) {
+    var head, script;
+    head = document.getElementsByTagName('head')[0];
+    script = document.createElement('script');
+    script.type = 'application/javascript';
+    script.src = settings[script_name];
+    script.async = true;
+    script.onload = function() {
+      loaded_scripts[script_name] = true;
+      return preInit();
+    };
+    return head.appendChild(script);
+  };
+  /*
+  Helper for prepping settings and checking if dependencies are loaded.
+  */
+  preInit = function() {
+    loaded_scripts.jquery_js = window.jQuery != null;
+    loaded_scripts.coffeescript_js = window.CoffeeScript != null;
+    if (!loaded.coffeescript_js) {
+      if (!settings.autoload_coffee_script) {
+        throw 'CoffeeTable requires coffee_script.js';
+      } else {
+        loadScript('coffeescript_js');
+      }
+    }
+    if (!loaded.jquery_js) {
+      if (!settings.autoload_jquery) {
+        throw 'CoffeeTable requires jQuery';
+      } else {
+        loadScript('jquery_js');
+      }
+    }
+    return init();
+  };
+  /*
+  Automatically load dependencies and initialize the widget, unless deferred.
+  */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.removeEventListener('DOMContentLoaded', arguments.callee, false);
+    if (!deferred && !loaded) {
+      setSettings();
+      return preInit();
+    }
+  }, false);
 }).call(this);
