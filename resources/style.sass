@@ -7,7 +7,7 @@
     +reset-font
     +box-shadow(0px 0px 4px #222)
 
-    background  : rgba(255,255,255,0.9)
+    background  : rgba(255,255,255,0.93)
     padding     : 0
     border      : 2px solid white
     z-index     : 2147483647
@@ -38,21 +38,24 @@
         font-family     : monospace
         list-style-type : circle
         overflow-y      : scroll
-    li
-        padding         : 4px
-        cursor          : pointer
-        &:hover
-            background-color    : rgba(255,255,0,0.2)
-            list-style-type     : disc
-        &:active
-            background-color    : rgba(255,255,0,0.8)
-        &.cs-error
-            color   : orange
-        &.js-error
-            color   : red
-        &.instructions
-            list-style-type     : none
-            text-align          : center
+        li
+            padding         : 4px
+            cursor          : pointer
+            &:hover
+                background-color    : rgba(255,255,0,0.2)
+                list-style-type     : disc
+            &:active
+                background-color    : rgba(255,255,0,0.8)
+            &.cs-error
+                color   : orange
+            &.js-error
+                color   : red
+            &.instructions
+                list-style-type     : none
+                text-align          : center
+                &:hover
+                    background-color    : white
+                    cursor              : default
     .clear
         padding         : 4px
         text-align      : center
@@ -82,7 +85,7 @@
         font-variant    : small-caps
         display         : none
         text-align      : right
-    .autocomplete
+    .autosuggest
         +box-shadow(0px 0px 4px #222)
         position        : absolute
         top             : -14px
@@ -91,6 +94,9 @@
         background      : rgba(255,255,255,0.9)
         width           : 250px
         overflow-y      : scroll
+        font-family     : monospace
+        li
+            padding: 4px
         li.heading
             font-weight     : bold
             text-decoration : underline
