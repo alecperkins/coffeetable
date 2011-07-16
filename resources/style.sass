@@ -1,0 +1,111 @@
+@import "compass/css3"
+@import "compass/reset/utilities"
+
+#__ID__
+    +nested-reset
+    +reset-box-model
+    +reset-font
+    +box-shadow(0px 0px 4px #222)
+
+    background  : rgba(255,255,255,0.9)
+    padding     : 0
+    border      : 2px solid white
+    z-index     : 2147483647
+    font-size   : 12px
+    max-height  : 95%
+    max-width   : 900px
+
+    button
+        float           : right
+        background      : white
+        border          : 1px solid #ccc
+        color           : #991111
+        cursor          : pointer
+        &:active
+            background      : #991111
+            color           : white
+    textarea
+        font-family     : monospace
+        font-size       : 15px
+        min-width       : 400px
+        height          : 22px
+        margin          : 4px
+    div
+        display         : none
+    .history
+        margin          : 8px
+        padding         : 4px 4px 4px 16px
+        font-family     : monospace
+        list-style-type : circle
+        overflow-y      : scroll
+    li
+        padding         : 4px
+        cursor          : pointer
+        &:hover
+            background-color    : rgba(255,255,0,0.2)
+            list-style-type     : disc
+        &:active
+            background-color    : rgba(255,255,0,0.8)
+        &.cs-error
+            color   : orange
+        &.js-error
+            color   : red
+        &.instructions
+            list-style-type     : none
+            text-align          : center
+    span
+        padding         : 4px
+        text-align      : center
+        cursor          : pointer
+        float           : left
+        color           : #555
+        font-variant    : small-caps
+        display         : none
+        &:hover
+            background-color    : #991111
+    a
+        padding         : 4px
+        text-align      : center
+        cursor          : pointer
+        float           : right
+        color           : #555
+        font-variant    : small-caps
+    input
+        vertical-align  : middle
+    p
+        padding         : 4px
+        margin          : 0
+        float           : right
+        display         : inline-block
+        width           : 80px
+        color           : #555
+        font-variant    : small-caps
+        display         : none
+        text-align      : right
+    .autocomplete
+        +box-shadow(0px 0px 4px #222)
+        position        : absolute
+        top             : -14px
+        left            : -300px
+        display         : block
+        background      : rgba(255,255,255,0.9)
+        width           : 250px
+        overflow-y      : scroll
+        li.heading
+            font-weight     : bold
+            text-decoration : underline
+            list-style-type : none
+
+    .function
+        color       : #229922
+    .number
+        color       : #222299
+    .string
+        color       : #992222
+    .undefined
+        color       : grey
+        font-style  : italic
+    .object
+        color       : inherit
+    .boolean
+        color       : #229999
