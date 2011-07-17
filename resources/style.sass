@@ -21,7 +21,7 @@
         border          : 1px solid #ccc
         color           : #991111
         cursor          : pointer
-        &:active
+        &:active, &.active
             background      : #991111
             color           : white
     .coffee-source
@@ -56,7 +56,7 @@
                 &:hover
                     background-color    : white
                     cursor              : default
-    .clear
+    .clear, .replay
         padding         : 4px
         text-align      : center
         cursor          : pointer
@@ -89,7 +89,7 @@
         +box-shadow(0px 0px 4px #222)
         position        : absolute
         top             : -2px
-        left            : -300px
+        left            : -260px
         display         : block
         background      : rgba(255,255,255,0.9)
         width           : 250px
@@ -112,6 +112,6 @@
         color       : grey
         font-style  : italic
     .object
-        color       : inherit
+        color       : black
     .boolean
         color       : #229999

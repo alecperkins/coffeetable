@@ -46,7 +46,8 @@ defaults =
     widget_position : 'fixed'
     widget_top      : '5px'
     widget_right    : '5px'
-    # id attribute of widget div,
+    # ID attribute of widget div.
+
     # Defaults to including a timestamp for extra (excessive?) uniqueness
     widget_id       : "CoffeeTable-#{ (new Date()).getTime() }"
 
@@ -73,19 +74,19 @@ keycode =
 # `__ID__` will be replaced by the setting for widget_id. This ID is used for
 # scoping the CSS rules to avoid conflicts with the existing page styles.
 # See `resources/template.html` and `resources/style.sass` for the source files.
-template = '<div id="__ID__"><style type="text/css">#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.93);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:"";content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ .history li{padding:4px;cursor:pointer}#__ID__ .history li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ .history li:active{background-color:rgba(255,255,0,0.8)}#__ID__ .history li.cs-error{color:orange}#__ID__ .history li.js-error{color:red}#__ID__ .history li.instructions{list-style-type:none;text-align:center}#__ID__ .clear{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autosuggest{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-2px;left:-300px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll;font-family:monospace}#__ID__ .autosuggest li{padding:4px}#__ID__ .autosuggest li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:inherit}#__ID__ .boolean{color:#299}</style><button class="toggle-widget">CoffeeTable</button><span class="clear">clear</span><a href="http://code.alecperkins.net/coffeetable/" target="_blank">?</a><p>multiline <input type="checkbox"></p><div class="input"><textarea class="coffee-source"></textarea><ul class="autosuggest"></ul><ul class="history"></ul></div></div>'
+template = '<div id="__ID__"><style type="text/css">#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.93);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:"";content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active,#__ID__ .toggle-widget.active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ .history li{padding:4px;cursor:pointer}#__ID__ .history li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ .history li:active{background-color:rgba(255,255,0,0.8)}#__ID__ .history li.cs-error{color:orange}#__ID__ .history li.js-error{color:red}#__ID__ .history li.instructions{list-style-type:none;text-align:center}#__ID__ .history li.instructions:hover{background-color:#fff;cursor:default}#__ID__ .clear,#__ID__ .replay{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover,#__ID__ .replay:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autosuggest{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-2px;left:-260px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll;font-family:monospace}#__ID__ .autosuggest li{padding:4px}#__ID__ .autosuggest li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:#000}#__ID__ .boolean{color:#299}</style><button class="toggle-widget">CoffeeTable</button><span class="clear">clear</span><span class="replay">replay</span><a href="http://code.alecperkins.net/coffeetable/" target="_blank">?</a><p>multiline <input type="checkbox"></p><div class="input"><textarea class="coffee-source"></textarea><ul class="autosuggest"></ul><ul class="history"></ul></div></div>'
 
 # Initialize variables so they're visible to all internal functions.
-$ = null
-settings = null
-$els = null
+$           = null
+settings    = null
+$els        = null
 
 # State variables
-active = false
-deferred = false
-loaded = false
-showing_multi_line = false
-history_index = 0
+active              = false
+deferred            = false
+loaded              = false
+showing_multi_line  = false
+history_index       = 0
 loaded_scripts =
     jquery_js       : false
     coffeescript_js : false
@@ -214,8 +215,16 @@ loadFromStorage = ->
 Clear the display of the history and excute each item in the history.
 ###
 replayHistory = ->
+    # Build the list of commands to replay.
+    entries_to_replay = (entry.source for entry in history)
+
+    # Clear the current history.
+    history = []
     $els.history_list.empty()
-    execute(item.source) for item in history
+    history_index = 0
+
+    # Execute the previous entries. 
+    execute(entry) for entry in entries_to_replay
 
 
 # ### execute
@@ -268,7 +277,7 @@ execute = (source) ->
         
         # Prepare the list item for this history entry.
         this_result_index = history.length - 1
-        new_li = $("<li class=''>#{ this_result_index }: #{ result }</li>")
+        new_li = $("<li class='#{ typeof result }'>#{ this_result_index }: #{ result }</li>")
 
         # Set the appropriate classes if there were an error.
         if js_error
@@ -290,6 +299,7 @@ execute = (source) ->
         localStorage?.setItem(settings.ls_key, JSON.stringify(entry_sources))
 
         $els.clear_history.show()
+        $els.replay_history.show()
 
 
 # ### clearHistory
@@ -312,7 +322,9 @@ clearHistory = ->
     autosuggest = [[window,'window']]
     autsuggest_query = ''
 
+    # Hide the history controls.
     $els.clear_history.hide()
+    $els.replay_history.hide()
 
 
 # ### appendInstructions
@@ -325,8 +337,7 @@ appendInstructions = ->
             instructions = 'type CoffeeScript, press shift+enter'
         else
             instructions = 'type CoffeeScript, press enter' 
-        instructions = $("<li class='instructions'>#{ instructions }</li>")
-        instructions.appendTo($els.history_list)
+        $els.history_list.html("<li class='instructions'>#{ instructions }</li>")
 
 
 # ### loadPrevious
@@ -396,7 +407,8 @@ renderWidget = ->
         history_list        : widget.find('ul.history')
         button              : widget.find('button')
         div                 : widget.find('div')
-        clear_history       : widget.find('span')
+        clear_history       : widget.find('span.clear')
+        replay_history      : widget.find('span.replay')
         a                   : widget.find('a')
         toggle_multiline    : widget.find('input')
         p                   : widget.find('p')
@@ -420,18 +432,29 @@ Setup the various events for the control elements.
 bindEvents = ->
     # Toggle the main edit elements of the widget.
     $els.button.click ->
+        active = not active
         if active
-            $els.div.hide()
-            $els.p.hide()
-        else
             $els.div.show()
             $els.p.show()
             $els.textarea.focus()
-        active = not active
+            $els.button.addClass('active')
+        else
+            $els.div.hide()
+            $els.p.hide()
+            $els.button.removeClass('active')
 
     # Clear history on demand.
     $els.clear_history.click ->
         clearHistory()
+    
+    # Replay history on demand.
+    $els.replay_history.click ->
+        # Empty the list now and replay after a slight delay, so there is a
+        # visual indication that something happened.
+        $els.history_list.empty()
+        setTimeout ->
+            replayHistory()
+        , 100
 
     # Toggle multi-line mode on demand.
     $els.toggle_multiline.click ->
@@ -493,28 +516,26 @@ bindEvents = ->
 
 # ## Export the API
 
-CoffeeTable =
-    show                : ->
+window.CoffeeTable =
+    show: ->
         $els.widget.show()
         return this
-    hide                : ->
+    hide: ->
         $els.widget.hide()
         return this
-    clear               : ->
+    clear: ->
         clearHistory()
         return this
-    replay              : ->
+    replay: ->
         replayHistory()
         return this
-    deferInit           : ->
+    deferInit: ->
         deferred = true
         return this
-    init                : (opts) ->
+    init: (opts) ->
         setSettings(opts)
         preInit()
         return this
-
-window.CoffeeTable = CoffeeTable
 
 
 
