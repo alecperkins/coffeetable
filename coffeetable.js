@@ -1,7 +1,7 @@
 (function() {
   /*
   
-  # CoffeeTable
+  # CoffeeTable v0.1.0
   
   A drop-in, CoffeeScript-fluent console for web pages.
   
@@ -19,7 +19,7 @@
     autoload_coffee_script: true,
     autoload_jquery: true,
     coffeescript_js: 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js',
-    jquery_js: 'lib/jquery-1.6.2-min.js',
+    jquery_js: 'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js',
     local_storage: true,
     ls_key: 'coffee-table',
     clear_on_load: false,
