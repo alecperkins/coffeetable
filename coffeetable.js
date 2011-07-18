@@ -513,14 +513,14 @@
     active = false;
     loaded_scripts.jquery_js = window.jQuery != null;
     loaded_scripts.coffeescript_js = window.CoffeeScript != null;
-    if (!loaded_scripts.jquery_js) {
+    if (!loaded_scripts.coffeescript_js) {
       if (!settings.autoload_coffee_script) {
         throw 'CoffeeTable requires coffee_script.js';
       } else {
         loadScript('coffeescript_js');
       }
     }
-    if (!loaded_scripts.coffeescript_js) {
+    if (!loaded_scripts.jquery_js) {
       if (!settings.autoload_jquery) {
         throw 'CoffeeTable requires jQuery';
       } else {

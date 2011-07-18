@@ -584,12 +584,12 @@ preInit = ->
 
     # If the scripts haven't been loaded, load them, or throw an error if
     # loading is disabled in settings.
-    if not loaded_scripts.jquery_js
+    if not loaded_scripts.coffeescript_js
         if not settings.autoload_coffee_script
             throw 'CoffeeTable requires coffee_script.js'
         else
             loadScript('coffeescript_js')
-    if not loaded_scripts.coffeescript_js
+    if not loaded_scripts.jquery_js
         if not settings.autoload_jquery
             throw 'CoffeeTable requires jQuery'
         else
