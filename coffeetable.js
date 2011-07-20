@@ -408,7 +408,7 @@
           loadPrevious(true);
         }
       }
-      if (e.which === keycode.ENTER && (!settings.multi_line || e.shiftKey)) {
+      if (e.which === keycode.ENTER && (!showing_multi_line || e.shiftKey)) {
         e.preventDefault();
         if (entered_source !== '') {
           execute(entered_source);

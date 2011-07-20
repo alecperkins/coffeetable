@@ -474,7 +474,7 @@ bindEvents = ->
 
         # If enter was pressed and in single-line mode or the shift key was
         # pressed, and the source isn't blank, execute it and clear the input.
-        if e.which is keycode.ENTER and (not settings.multi_line or e.shiftKey)
+        if e.which is keycode.ENTER and (not showing_multi_line or e.shiftKey)
             e.preventDefault()
             if entered_source isnt ''
                 execute(entered_source)
