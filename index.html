@@ -88,6 +88,12 @@
         #pointer span {
             letter-spacing: -2px;
         }
+        .bookmarklet {
+            border-radius: 1em;
+            border: 1px solid #ccc;
+            padding: 1px 5px;
+            background: rgba(0,0,255,0.05);
+        }
     </style> 
 </head>
 <body>
@@ -145,7 +151,11 @@
     <p>If localStorage is supported, CoffeeTable uses it to persist the history, and then <em>replay</em> it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
     
     <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.</p> 
- 
+
+    <h3>Bookmarklet</h3>
+    <p>Drag this to your bookmarks toolbar for a bookmarklet that will load CoffeeScript onto whatever page you happen to be on:</p>
+    <a class="bookmarklet" href="javascript:function ctl1(){var d=document,s=d.createElement('script'),b=d.body;if(!b)throw(0);s.setAttribute('src', 'http://code.alecperkins.net/coffeetable/coffeetable-min.js');s.onload=function(){CoffeeTable.init()};b.appendChild(s);}ctl1();void(0)">CoffeeTable</a>
+
     <h3>Output color coding</h3> 
  
     <ul> 

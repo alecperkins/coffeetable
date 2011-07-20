@@ -25,6 +25,13 @@ If localStorage is supported, CoffeeTable uses it to persist the history, and th
 
 There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.
 
+### Bookmarklet
+
+Add this to your bookmarks toolbar for a bookmarklet that will load CoffeeTable on any page.
+
+    javascript:function ctl1(){var d=document,s=d.createElement('script'),b=d.body;if(!b)throw(0);s.setAttribute('src', 'http://code.alecperkins.net/coffeetable/coffeetable-min.js');s.onload=function(){CoffeeTable.init()};b.appendChild(s);}ctl1();void(0)
+
+
 ### Output color coding
 
 * light-red : JavaScript eval error
