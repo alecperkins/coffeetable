@@ -1,4 +1,4 @@
-# CoffeeTable, v0.1.0
+# CoffeeTable, v0.1.1
 A drop-in workbench for experimentation. CoffeeTable provides a CoffeeScript console on a page.
 
 * [Demo](http://code.alecperkins.net/coffeetable/)
