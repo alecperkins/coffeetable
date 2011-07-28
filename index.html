@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+<head>
+    <title>CoffeeTable - Code - Alec Perkins</title>
+    
+    <script type="text/javascript" async="true" src="//www.google-analytics.com/ga.js"></script> 
+    <script type="text/javascript">var _gaq = [['_setAccount', 'UA-9658094-1'],['_trackPageview']];</script>
+
+    <script src="lib/jquery-1.6.2-min.js" type="text/javascript"></script>
+    <script src="lib/coffee_script-1.1.1-min.js" type="text/javascript"></script>
+    <script src="coffeetable-min.js" type="text/javascript"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Molengo&amp;subset=latin" rel="stylesheet" type="text/css">
+    <link rel="icon" href="http://alecperkins.net/favicon.png" type="image/png">
+
+    <style type="text/css"> 
+        body {
+            font-family: "Molengo","DIN Std","Trebuchet MS","sans-serif";
+            font-size: 14px;
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 1em;
+            font-weight: 300;
+        }
+        a {
+            color: #0071bc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code, pre {
+            background: #fbfbfb;
+            border: 1px solid #ccc;
+            font-family: "Menlo", monospace;
+        }
+        code {
+            padding: 0 1px;
+            margin: 0 -1px;
+        }
+        pre {
+            padding: 1em;
+        }
+        span.comment {
+            font-style: italic;
+            color: #aaa;
+        }
+        .function {
+            color: #229922;
+        }
+        .number { 
+            color: #222299;
+        }
+        .string {
+            color: #992222;
+        }
+        .undefined {
+            color: grey;
+            font-style: italic;
+        }
+        .object {
+            color: black;
+        }
+        .boolean {
+            color: #229999;
+        }
+        .cs-error {
+            color: orange;
+        }
+        .js-error {
+            color: red;
+        }
+        .clippy {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        #pointer {
+             text-align: right;
+             font-size:1em;
+             font-weight: bold;
+             position: absolute;
+             right: 150px;
+             top: 5px;
+        }
+        #pointer span {
+            letter-spacing: -2px;
+        }
+        .bookmarklet {
+            border-radius: 1em;
+            border: 1px solid #ccc;
+            padding: 1px 5px;
+            background: rgba(0,0,255,0.05);
+        }
+    </style> 
+</head>
+<body>
+    <div id="pointer">Click that <span>--------------&gt;</span></div>
+    
+    <h1>CoffeeTable, v0.1.1</h1> 
+ 
+    <p>A drop-in workbench for experimentation, CoffeeTable provides a CoffeeScript-fluent console on a page, with persistent history and auto-suggest.</p>
+ 
+    <ul>
+        <li><a href="https://github.com/alecperkins/coffeetable">GitHub repo &raquo;</a></li>
+        <li><a href="docs/coffeetable.html">Annotated source</a></li>
+    </ul> 
+ 
+    <h2>Requires</h2> 
+ 
+    <ul> 
+        <li><a href="http://jquery.com/">jQuery &raquo;</a></li> 
+        <li><a href="http://coffeescript.org">coffee_script.js &raquo;</a></li> 
+    </ul>
+
+    <p>(loaded automatically if not already present)</p>
+
+    <h2>To use</h2> 
+    
+    <p>Load <code>coffeetable-min.js</code> into the page:<span class="clippy">
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+            width="110"
+            height="14"
+            id="clippy" >
+    <param name="movie" value="lib/clippy.swf"/>
+    <param name="allowScriptAccess" value="always" />
+    <param name="quality" value="high" />
+    <param name="scale" value="noscale" />
+    <param NAME="FlashVars" value="text=<script type='application/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>">
+    <param name="bgcolor" value="#ffffff">
+    <embed src="lib/clippy.swf"
+           width="110"
+           height="14"
+           name="clippy"
+           quality="high"
+           allowScriptAccess="always"
+           type="application/x-shockwave-flash"
+           pluginspage="http://www.macromedia.com/go/getflashplayer"
+           FlashVars="text=<script type='application/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>"
+           bgcolor="#ffffff"
+    />
+    </object>
+    </span>
+    </p>
+    <code>&lt;script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"&gt;&lt;/script&gt;</code>
+    
+    <p>Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press <code>enter</code> to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use <code>shift</code>+<code>enter</code> instead to execute code. <code>log</code> and <code>dir</code> are shortcuts to the <code>console</code> functions. <code>this</code> is the <code>window</code> object. Everything happens in the global context.</p>
+    
+    <p>If localStorage is supported, CoffeeTable uses it to persist the history, and then <em>replay</em> it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
+    
+    <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.</p> 
+
+    <h3>Bookmarklet</h3>
+    <p>Drag this to your bookmarks toolbar for a bookmarklet that will load CoffeeScript onto whatever page you happen to be on:</p>
+    <a class="bookmarklet" href="javascript:function ctl1(){var d=document,s=d.createElement('script'),b=d.body;if(!b)throw(0);s.setAttribute('src', 'http://code.alecperkins.net/coffeetable/coffeetable-min.js');s.onload=function(){CoffeeTable.init()};b.appendChild(s);}ctl1();void(0)">CoffeeTable</a>
+
+    <h3>Output color coding</h3> 
+ 
+    <ul> 
+        <li class="js-error">JavaScript eval error</li> 
+        <li class="cs-error">CoffeeScript parse error</li> 
+        <li class="string">string</li> 
+        <li class="function">function</li> 
+        <li class="boolean">boolean</li> 
+        <li class="number">number</li> 
+        <li class="object">object</li> 
+        <li class="undefined">undefined</li> 
+    </ul>
+
+    <h3>API</h3>
+    <p>To prevent automatic initialization, call <code>CoffeeTable.deferInit()</code> before the DOM is ready.</p>
+
+    <p>If you want to initialize the widget before the document ready event, or after <code>deferInit</code>, call <code>CoffeeTable.init(options)</code>, where options is an optional hash of settings overrides. You can call <code>init</code> any time after CoffeeTable has been loaded onto the page.</p>
+
+    <p>Only one widget can exist at a time. Calling <code>init</code> after the widget has loaded will reinitialize it, using the specified options.</p>
+
+    <p><em>Note: the replaying of history, either on widget reload or on demand, can be dependent on the overall state of the page, and may not be idempotent.</em></p>
+
+    <h3>Default settings:</h3>
+    <pre>
+defaults =
+    <span class="comment"># Automatically load jQuery and CoffeeScript if not found in page</span>
+    autoload_coffee_script  : <span class="boolean">true</span>
+    autoload_jquery         : <span class="boolean">true</span>
+
+    <span class="comment"># URLs of CoffeeScript and jQuery files to load </span>
+    coffeescript_js         : <span class="string">'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js'</span>
+    jquery_js               : <span class="string">'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js'</span>
+
+    <span class="comment"># Persist the history using localStorage</span>
+    local_storage           : <span class="boolean">true</span>
+
+    <span class="comment"># Key to persist data with in localStorage</span>
+    ls_key                  : <span class="string">'coffee-table'</span>
+
+    <span class="comment"># Clear the history on load</span>
+    clear_on_load           : <span class="boolean">false</span>
+
+    <span class="comment"># Default to multi-line mode</span>
+    multi_line              : <span class="boolean">false</span>
+
+    <span class="comment"># Characters to use as indentation when TAB is pressed</span>
+    indent                  : <span class="string">'    '</span>
+
+    <span class="comment"># Enable auto-suggest panel</span>
+    auto_suggest            : <span class="boolean">true</span>
+
+    <span class="comment"># Widget positioning on the screen (CSS values)</span>
+    widget_position         : <span class="string">'fixed'</span>
+    widget_top              : <span class="string">'5px'</span>
+    widget_right            : <span class="string">'5px'</span>
+
+    <span class="comment"># ID attribute of widget div</span>
+    widget_id               : <span class="string">"CoffeeTable-#{ (new Date()).getTime() }"</span>
+
+</pre>
+
+</body>
+</html>
