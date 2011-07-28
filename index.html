@@ -126,7 +126,7 @@
     <param name="allowScriptAccess" value="always" />
     <param name="quality" value="high" />
     <param name="scale" value="noscale" />
-    <param NAME="FlashVars" value="text=<script type='application/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>">
+    <param NAME="FlashVars" value="text=<script type='text/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>">
     <param name="bgcolor" value="#ffffff">
     <embed src="lib/clippy.swf"
            width="110"
@@ -136,23 +136,23 @@
            allowScriptAccess="always"
            type="application/x-shockwave-flash"
            pluginspage="http://www.macromedia.com/go/getflashplayer"
-           FlashVars="text=<script type='application/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>"
+           FlashVars="text=<script type='text/javascript' src='http://code.alecperkins.net/coffeetable/coffeetable-min.js'></script>"
            bgcolor="#ffffff"
     />
     </object>
     </span>
     </p>
-    <code>&lt;script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"&gt;&lt;/script&gt;</code>
+    <code>&lt;script type="text/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"&gt;&lt;/script&gt;</code>
     
     <p>Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press <code>enter</code> to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use <code>shift</code>+<code>enter</code> instead to execute code. <code>log</code> and <code>dir</code> are shortcuts to the <code>console</code> functions. <code>this</code> is the <code>window</code> object. Everything happens in the global context.</p>
     
-    <p>If localStorage is supported, CoffeeTable uses it to persist the history, and then <em>replay</em> it on load. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
+    <p>If localStorage is supported, CoffeeTable uses it to persist the history, which can then be <em>replayed</em>. By default the history is loaded but not executed. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
     
     <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.</p> 
 
     <h3>Bookmarklet</h3>
     <p>Drag this to your bookmarks toolbar for a bookmarklet that will load CoffeeScript onto whatever page you happen to be on:</p>
-    <a class="bookmarklet" href="javascript:function ctl1(){var d=document,s=d.createElement('script'),b=d.body;if(!b)throw(0);s.setAttribute('src', 'http://code.alecperkins.net/coffeetable/coffeetable-min.js');s.onload=function(){CoffeeTable.init()};b.appendChild(s);}ctl1();void(0)">CoffeeTable</a>
+    <a class="bookmarklet" href="javascript:function l(){var d=document,s=d.createElement('script'),b=d.body;if(!b)throw(0);s.setAttribute('src', 'http://code.alecperkins.net/coffeetable/coffeetable-min.js');s.onload=function(){CoffeeTable.init()};b.appendChild(s);}l();void(0)">CoffeeTable</a>
 
     <h3>Output color coding</h3> 
  
@@ -195,6 +195,9 @@ defaults =
 
     <span class="comment"># Clear the history on load</span>
     clear_on_load           : <span class="boolean">false</span>
+
+    <span class="comment"># Replay the history on load</span>
+    replay_on_load          : <span class="boolean">false</span>
 
     <span class="comment"># Default to multi-line mode</span>
     multi_line              : <span class="boolean">false</span>
