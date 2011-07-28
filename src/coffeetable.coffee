@@ -1,6 +1,6 @@
 ###
 
-# CoffeeTable v0.1.1
+# CoffeeTable v0.2.0pre
 
 A drop-in, CoffeeScript-fluent console for web pages.
 
@@ -34,6 +34,8 @@ defaults =
     ls_key          : 'coffee-table'
     # Clear the history on load
     clear_on_load   : false
+    # Replay the history on load
+    replay_on_load  : false
 
     # Default to multi-line mode
     multi_line      : false
@@ -73,7 +75,7 @@ keycode =
 # Template for widget markup and style.
 # `__ID__` will be replaced by the setting for widget_id. This ID is used for
 # scoping the CSS rules to avoid conflicts with the existing page styles.
-# See `resources/template.html` and `resources/style.sass` for the source files.
+# See `src/template.html` and `src/style.sass` for the source files.
 template = '<div id="__ID__"><style type="text/css">#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.93);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:"";content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active,#__ID__ .toggle-widget.active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ .history li{padding:4px;cursor:pointer}#__ID__ .history li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ .history li:active{background-color:rgba(255,255,0,0.8)}#__ID__ .history li.cs-error{color:orange}#__ID__ .history li.js-error{color:red}#__ID__ .history li.instructions{list-style-type:none;text-align:center}#__ID__ .history li.instructions:hover{background-color:#fff;cursor:default}#__ID__ .clear,#__ID__ .replay{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover,#__ID__ .replay:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autosuggest{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-2px;left:-260px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll;font-family:monospace}#__ID__ .autosuggest li{padding:4px}#__ID__ .autosuggest li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:#000}#__ID__ .boolean{color:#299}</style><button class="toggle-widget">CoffeeTable</button><span class="clear">clear</span><span class="replay">replay</span><a href="http://code.alecperkins.net/coffeetable/" target="_blank">?</a><p>multiline <input type="checkbox"></p><div class="input"><textarea class="coffee-source"></textarea><ul class="autosuggest"></ul><ul class="history"></ul></div></div>'
 
 # Initialize variables so they're visible to all internal functions.
@@ -121,7 +123,7 @@ init = (opts={}) ->
         template = template.replace(/__ID__/g, settings.widget_id)
         renderWidget()
 
-        # Load previous history if enabled by settings.
+        # Load previous history if localStorage is enabled by settings.
         if settings.local_storage
             loadFromStorage()
 
@@ -199,7 +201,7 @@ Throws an error if called when localStorage is not supported.
 ###
 loadFromStorage = ->
     if not localStorage?
-        throw 'localStorage not supported by this browser. History will not be persisted'
+        throw 'localStorage not supported by this browser. History will not be persisted.'
     else
         # Get previous data
         previous_data = localStorage.getItem(settings.ls_key)
@@ -207,7 +209,10 @@ loadFromStorage = ->
             # If data has been persisted, parse the string from localStorage
             # and execute each history item in order.
             previous_data = JSON.parse(previous_data)
-            execute(entry_source) for entry_source in previous_data
+
+            # Replay the previous entries, running as a dry-run if specified in
+            # settings.
+            execute(entry_source, not settings.replay_on_load) for entry_source in previous_data
 
 
 # ### replayHistory
@@ -229,9 +234,10 @@ replayHistory = ->
 
 # ### execute
 ###
-Compile and evaluate the specified CoffeeScript source string.
+Compile and evaluate the specified CoffeeScript source string. Optionally,
+the execution can be a dry run and the source won't actually be executed.
 ###
-execute = (source) ->
+execute = (source, dry_run=false) ->
     # If the command is to clear localStorage, just clear the history instead.
     # Otherwise, the localStorage will be cleared, but the history remains in
     # memory and would be replaced into localStorage, negating the command.
@@ -257,14 +263,17 @@ execute = (source) ->
             cs_error = true
             error_output = error
 
-        # If the source compiled cleanly, try evaluating the JavaScript in the
-        # global context.
-        if not error_output?
+        # If the source compiled cleanly, and not doing a dry run, try
+        # evaluating the JavaScript in the global context.
+        if not error_output? and not dry_run
             try
                 result = eval.call(window, compiled_js)
             catch eval_error
                 js_error = true
                 error_output = eval_error
+        # If doing a dry run, the result is just the compiled CoffeeScript.
+        else if dry_run
+            result = compiled_js
 
         # If there is an error, that becomes the result.
         if error_output?

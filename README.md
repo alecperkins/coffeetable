@@ -1,4 +1,4 @@
-# CoffeeTable v0.1.1
+# CoffeeTable v0.2.0pre
 
 A drop-in, CoffeeScript-fluent console for web pages.
 
@@ -9,7 +9,7 @@ A drop-in, CoffeeScript-fluent console for web pages.
 ## To use
 
 Load `coffeetable-min.js` into the page:
-`<script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"></script>`
+`<script type="text/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"></script>`
 ...and the widget will automatically initialize.
 
 
