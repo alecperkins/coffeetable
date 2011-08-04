@@ -12,18 +12,38 @@
     border      : 2px solid white
     z-index     : 2147483647
     font-size   : 12px
+    font-family : Verdana, sans-serif
     max-height  : 95%
     max-width   : 900px
-
+    color       : black
+    *
+        visibility      : visible
+        font-weight     : 500
+        +single-box-shadow($color: transparent)
+        +single-text-shadow($color: transparent)
+        +border-radius(0)
+        margin          : 0
+        padding         : 0
+        position        : static
+    ul
+        text-align      : left
     .toggle-widget
-        float           : right
-        background      : white
-        border          : 1px solid #ccc
-        color           : #991111
-        cursor          : pointer
+        float           : right !important
+        background      : white !important
+        border          : 1px solid #ccc !important
+        color           : #991111 !important
+        cursor          : pointer !important
+        height          : 20px !important
+        width           : 78px !important
+        display         : block !important
+        min-width       : 78px !important
+        min-height      : 20px !important
+        font-size       : 12px !important
+        line-height     : 1em !important
+        font-weight     : 500 !important
         &:active, &.active
-            background      : #991111
-            color           : white
+            background      : #991111 !important
+            color           : white !important
     .coffee-source
         font-family     : monospace
         font-size       : 15px
@@ -73,6 +93,7 @@
         float           : right
         color           : #555
         font-variant    : small-caps
+        text-decoration : none
     input
         vertical-align  : middle
     p
