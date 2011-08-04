@@ -14,7 +14,7 @@
   `<script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"></script>`
   ...and the widget will automatically initialize.
   
-  */  var $, $els, active, appendInstructions, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderWidget, replayHistory, setSettings, settings, showing_multi_line, template, toggleMultiLine, _ref, _ref2;
+  */  var $, $els, active, appendInstructions, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderWidget, replayHistory, resizeWidget, setSettings, settings, showing_multi_line, template, toggleMultiLine, _ref, _ref2;
   defaults = {
     autoload_coffee_script: true,
     autoload_jquery: true,
@@ -152,7 +152,8 @@
       item = match_list[_j];
       html += "<li class='" + item[1] + "'>" + item[0] + "</li>";
     }
-    return $els.autosuggest_list.html(html);
+    $els.autosuggest_list.html(html);
+    return resizeWidget();
   };
   /*
   If localStorage is supported, try loading previous command history.
@@ -348,6 +349,21 @@
     return appendInstructions();
   };
   /*
+  Set the max-height and max-width of the widget and auto-suggest list to keep
+  it visible in the window. (Being absolutely positioned, it doesn't affect the
+  scrolling of the overall window.)
+  */
+  resizeWidget = function() {
+    var height, width;
+    height = "" + (window.innerHeight - 140) + "px";
+    width = "" + (window.innerWidth - 255) + "px";
+    $els.autosuggest_list.css({
+      'max-height': height,
+      'max-width': width
+    });
+    return $els.history_list.css('max-height', height);
+  };
+  /*
   Build and display the widget elements.
   */
   renderWidget = function() {
@@ -441,14 +457,7 @@
       $els.toggle_multiline.click();
     }
     return $(window).resize(function() {
-      var height, width;
-      height = "" + (window.innerHeight - 140) + "px";
-      width = "" + (window.innerWidth - 255) + "px";
-      $els.autosuggest_list.css({
-        'max-height': height,
-        'max-width': width
-      });
-      return $els.history_list.css('max-height', height);
+      return resizeWidget();
     });
   };
   window.CoffeeTable = {

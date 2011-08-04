@@ -193,6 +193,9 @@ renderAutosuggest = (working_items, match_list) ->
     # Show the complete list.
     $els.autosuggest_list.html(html)
 
+    # Resize for good measure
+    resizeWidget()
+
 
 # ### loadFromStorage
 ###
@@ -400,6 +403,21 @@ toggleMultiLine = ->
     appendInstructions()
 
 
+# ### resizeWidget
+###
+Set the max-height and max-width of the widget and auto-suggest list to keep
+it visible in the window. (Being absolutely positioned, it doesn't affect the
+scrolling of the overall window.)
+###
+resizeWidget = ->
+    height = "#{ window.innerHeight - 140 }px"
+    width = "#{ window.innerWidth - 255 }px"
+    $els.autosuggest_list.css
+        'max-height'    : height
+        'max-width'     : width
+    $els.history_list.css('max-height',height)
+
+
 # ### renderWidget
 ###
 Build and display the widget elements.
@@ -514,12 +532,7 @@ bindEvents = ->
 
     # Keep the auto-suggest and history lists within the window.
     $(window).resize ->
-        height = "#{ window.innerHeight - 140 }px"
-        width = "#{ window.innerWidth - 255 }px"
-        $els.autosuggest_list.css
-            'max-height'    : height
-            'max-width'     : width
-        $els.history_list.css('max-height',height)
+        resizeWidget()
 
 
 
