@@ -537,10 +537,21 @@ bindEvents = ->
     $(window).resize ->
         resizeWidget()
 
+# ### unloadWidget
+###
+Remove the widget's element from the DOM.
+###
+unloadWidget = () ->
+    $els.widget.remove()
+
 
 
 # ## Export the API
 
+# Unload any previous widget
+window.CoffeeTable?.unload()
+
+# Reassign the API functions
 window.CoffeeTable =
     show: ->
         $els.widget.show()
@@ -561,6 +572,11 @@ window.CoffeeTable =
         setSettings(opts)
         preInit()
         return this
+    unload: ->
+        unloadWidget()
+        return this
+    active: ->
+        return active
 
 
 
@@ -599,8 +615,6 @@ loadScript = (script_name) ->
 Helper for prepping settings and checking if dependencies are loaded.
 ###
 preInit = ->
-    # Remove any previous widget.
-    $els?.widget?.remove()
     active = false
 
     # Check if jQuery and CoffeeScript have already been loaded.
