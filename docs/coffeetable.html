@@ -217,7 +217,8 @@ Lookin' at you, IE.</p>
     <span class="nv">DOWN        : </span><span class="mi">40</span>
     <span class="nv">ENTER       : </span><span class="mi">13</span>
     <span class="nv">TAB         : </span><span class="mi">9</span>
-    <span class="nv">BACKSPACE   : </span><span class="mi">8</span></pre></div></pre></div>
+    <span class="nv">BACKSPACE   : </span><span class="mi">8</span>
+    <span class="nv">ESCAPE      : </span><span class="mi">27</span></pre></div></pre></div>
       </td>
     </tr><tr id='section-18'>
       <td class=docs>
@@ -230,7 +231,7 @@ scoping the CSS rules to avoid conflicts with the existing page styles.
 See <code>src/template.html</code> and <code>src/style.sass</code> for the source files.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">template = </span><span class="s1">&#39;&lt;div id=&quot;__ID__&quot;&gt;&lt;style type=&quot;text/css&quot;&gt;#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.93);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;max-height:95%;max-width:900px}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:&quot;&quot;;content:none}#__ID__ a img{border:none}#__ID__ .toggle-widget{float:right;background:#fff;border:1px solid #ccc;color:#911;cursor:pointer}#__ID__ .toggle-widget:active,#__ID__ .toggle-widget.active{background:#911;color:#fff}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ .history li{padding:4px;cursor:pointer}#__ID__ .history li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ .history li:active{background-color:rgba(255,255,0,0.8)}#__ID__ .history li.cs-error{color:orange}#__ID__ .history li.js-error{color:red}#__ID__ .history li.instructions{list-style-type:none;text-align:center}#__ID__ .history li.instructions:hover{background-color:#fff;cursor:default}#__ID__ .clear,#__ID__ .replay{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover,#__ID__ .replay:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps}#__ID__ input{vertical-align:middle}#__ID__ p{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autosuggest{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-2px;left:-260px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll;font-family:monospace}#__ID__ .autosuggest li{padding:4px}#__ID__ .autosuggest li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:#000}#__ID__ .boolean{color:#299}&lt;/style&gt;&lt;button class=&quot;toggle-widget&quot;&gt;CoffeeTable&lt;/button&gt;&lt;span class=&quot;clear&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;replay&quot;&gt;replay&lt;/span&gt;&lt;a href=&quot;http://code.alecperkins.net/coffeetable/&quot; target=&quot;_blank&quot;&gt;?&lt;/a&gt;&lt;p&gt;multiline &lt;input type=&quot;checkbox&quot;&gt;&lt;/p&gt;&lt;div class=&quot;input&quot;&gt;&lt;textarea class=&quot;coffee-source&quot;&gt;&lt;/textarea&gt;&lt;ul class=&quot;autosuggest&quot;&gt;&lt;/ul&gt;&lt;ul class=&quot;history&quot;&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&#39;</span></pre></div></pre></div>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">template = </span><span class="s1">&#39;&lt;div id=&quot;__ID__&quot;&gt;&lt;style type=&quot;text/css&quot;&gt;#__ID__{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;background:rgba(255,255,255,0.93);padding:0;border:2px solid #fff;z-index:2147483647;font-size:12px;font-family:Verdana,sans-serif;max-height:95%;max-width:900px;color:#000}#__ID__ div,#__ID__ span,#__ID__ applet,#__ID__ object,#__ID__ iframe,#__ID__ h1,#__ID__ h2,#__ID__ h3,#__ID__ h4,#__ID__ h5,#__ID__ h6,#__ID__ p,#__ID__ blockquote,#__ID__ pre,#__ID__ a,#__ID__ abbr,#__ID__ acronym,#__ID__ address,#__ID__ big,#__ID__ cite,#__ID__ code,#__ID__ del,#__ID__ dfn,#__ID__ em,#__ID__ img,#__ID__ ins,#__ID__ kbd,#__ID__ q,#__ID__ s,#__ID__ samp,#__ID__ small,#__ID__ strike,#__ID__ strong,#__ID__ sub,#__ID__ sup,#__ID__ tt,#__ID__ var,#__ID__ b,#__ID__ u,#__ID__ i,#__ID__ center,#__ID__ dl,#__ID__ dt,#__ID__ dd,#__ID__ ol,#__ID__ ul,#__ID__ li,#__ID__ fieldset,#__ID__ form,#__ID__ label,#__ID__ legend,#__ID__ table,#__ID__ caption,#__ID__ tbody,#__ID__ tfoot,#__ID__ thead,#__ID__ tr,#__ID__ th,#__ID__ td,#__ID__ article,#__ID__ aside,#__ID__ canvas,#__ID__ details,#__ID__ embed,#__ID__ figure,#__ID__ figcaption,#__ID__ footer,#__ID__ header,#__ID__ hgroup,#__ID__ menu,#__ID__ nav,#__ID__ output,#__ID__ ruby,#__ID__ section,#__ID__ summary,#__ID__ time,#__ID__ mark,#__ID__ audio,#__ID__ video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}#__ID__ table{border-collapse:collapse;border-spacing:0}#__ID__ caption,#__ID__ th,#__ID__ td{text-align:left;font-weight:normal;vertical-align:middle}#__ID__ q,#__ID__ blockquote{quotes:none}#__ID__ q:before,#__ID__ q:after,#__ID__ blockquote:before,#__ID__ blockquote:after{content:&quot;&quot;;content:none}#__ID__ a img{border:none}#__ID__ *{visibility:visible;font-weight:500;-moz-box-shadow:0px 0px 5px transparent;-webkit-box-shadow:0px 0px 5px transparent;-o-box-shadow:0px 0px 5px transparent;box-shadow:0px 0px 5px transparent;text-shadow:transparent 0px 0px 1px;-moz-border-radius:0;-webkit-border-radius:0;-o-border-radius:0;-ms-border-radius:0;-khtml-border-radius:0;border-radius:0;margin:0;padding:0;position:static}#__ID__ ul{text-align:left}#__ID__ .toggle-widget{float:right!important;background:#fff!important;border:1px solid #ccc!important;color:#911!important;cursor:pointer!important;height:20px!important;width:78px!important;display:block!important;min-width:78px!important;min-height:20px!important;font-size:12px!important;line-height:1em!important;font-weight:500!important}#__ID__ .toggle-widget:active,#__ID__ .toggle-widget.active{background:#911!important;color:#fff!important}#__ID__ .coffee-source{font-family:monospace;font-size:15px;min-width:400px;height:22px;margin:4px}#__ID__ .input{display:none}#__ID__ .history{margin:8px;padding:4px 4px 4px 16px;font-family:monospace;list-style-type:circle;overflow-y:scroll}#__ID__ .history li{padding:4px;cursor:pointer}#__ID__ .history li:hover{background-color:rgba(255,255,0,0.2);list-style-type:disc}#__ID__ .history li:active{background-color:rgba(255,255,0,0.8)}#__ID__ .history li.cs-error{color:orange}#__ID__ .history li.js-error{color:red}#__ID__ p.instructions{text-align:center}#__ID__ .clear,#__ID__ .replay{padding:4px;text-align:center;cursor:pointer;float:left;color:#555;font-variant:small-caps;display:none}#__ID__ .clear:hover,#__ID__ .replay:hover{color:#911}#__ID__ a{padding:4px;text-align:center;cursor:pointer;float:right;color:#555;font-variant:small-caps;text-decoration:none}#__ID__ input{vertical-align:middle}#__ID__ p.mode{padding:4px;margin:0;float:right;display:inline-block;width:80px;color:#555;font-variant:small-caps;display:none;text-align:right}#__ID__ .autosuggest{-moz-box-shadow:0px 0px 4px #222222;-webkit-box-shadow:0px 0px 4px #222222;-o-box-shadow:0px 0px 4px #222222;box-shadow:0px 0px 4px #222222;position:absolute;top:-2px;left:-260px;display:block;background:rgba(255,255,255,0.9);width:250px;overflow-y:scroll;font-family:monospace}#__ID__ .autosuggest li{padding:4px}#__ID__ .autosuggest li.heading{font-weight:bold;text-decoration:underline;list-style-type:none}#__ID__ .function{color:#292}#__ID__ .number{color:#229}#__ID__ .string{color:#922}#__ID__ .undefined{color:grey;font-style:italic}#__ID__ .object{color:#000}#__ID__ .boolean{color:#299}&lt;/style&gt;&lt;button class=&quot;toggle-widget&quot;&gt;CoffeeTable&lt;/button&gt;&lt;span class=&quot;clear&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;replay&quot;&gt;replay&lt;/span&gt;&lt;a href=&quot;http://code.alecperkins.net/coffeetable/&quot; target=&quot;_blank&quot;&gt;?&lt;/a&gt;&lt;p class=&quot;mode&quot;&gt;multiline &lt;input type=&quot;checkbox&quot;&gt;&lt;/p&gt;&lt;div class=&quot;input&quot;&gt;&lt;textarea class=&quot;coffee-source&quot;&gt;&lt;/textarea&gt;&lt;p class=&quot;instructions&quot;&gt;&lt;/p&gt;&lt;ul class=&quot;autosuggest&quot;&gt;&lt;/ul&gt;&lt;ul class=&quot;history&quot;&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&#39;</span></pre></div></pre></div>
       </td>
     </tr><tr id='section-19'>
       <td class=docs>
@@ -351,10 +352,11 @@ supplied text. Done by iterating over the objects loaded, starting with
         <div class="octowrap">
           <a class="octothorpe" href="#section-28">#</a>
         </div>
-        <p>If the key is backspace and nothing is shown, clear auto-suggest list.</p>
+        <p>If the key is backspace and nothing is shown, or if the key is escape,
+clear auto-suggest list.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre>    <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">is</span> <span class="nx">keycode</span><span class="p">.</span><span class="nx">BACKSPACE</span> <span class="o">and</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span> <span class="o">and</span> <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">html</span><span class="p">().</span><span class="nx">length</span> <span class="o">isnt</span> <span class="mi">0</span>
+        <div class='highlight'><pre><div class="highlight"><pre>    <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">is</span> <span class="nx">keycode</span><span class="p">.</span><span class="nx">ESCAPE</span> <span class="o">or</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">is</span> <span class="nx">keycode</span><span class="p">.</span><span class="nx">BACKSPACE</span> <span class="o">and</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span> <span class="o">and</span> <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">html</span><span class="p">().</span><span class="nx">length</span> <span class="o">isnt</span> <span class="mi">0</span><span class="p">)</span>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">else</span></pre></div></pre></div>
       </td>
@@ -498,6 +500,16 @@ the properties that match.</p>
         <div class="octowrap">
           <a class="octothorpe" href="#section-41">#</a>
         </div>
+        <p>Resize for good measure</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">resizeWidget</span><span class="p">()</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-42'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-42">#</a>
+        </div>
         <h3>loadFromStorage</h3>
 <p>If localStorage is supported, try loading previous command history.
 Throws an error if called when localStorage is not supported.</p>
@@ -508,10 +520,10 @@ Throws an error if called when localStorage is not supported.</p>
         <span class="k">throw</span> <span class="s1">&#39;localStorage not supported by this browser. History will not be persisted.&#39;</span>
     <span class="k">else</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-42'>
+    </tr><tr id='section-43'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-42">#</a>
+          <a class="octothorpe" href="#section-43">#</a>
         </div>
         <p>Get previous data</p>
       </td>
@@ -519,10 +531,10 @@ Throws an error if called when localStorage is not supported.</p>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="nv">previous_data = </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">ls_key</span><span class="p">)</span>
         <span class="k">if</span> <span class="nx">previous_data</span><span class="o">?</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-43'>
+    </tr><tr id='section-44'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-43">#</a>
+          <a class="octothorpe" href="#section-44">#</a>
         </div>
         <p>If data has been persisted, parse the string from localStorage
 and execute each history item in order.</p>
@@ -530,10 +542,10 @@ and execute each history item in order.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>            <span class="nv">previous_data = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">previous_data</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-44'>
+    </tr><tr id='section-45'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-44">#</a>
+          <a class="octothorpe" href="#section-45">#</a>
         </div>
         <p>Replay the previous entries, running as a dry-run if specified in
 settings.</p>
@@ -541,10 +553,10 @@ settings.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>            <span class="nx">execute</span><span class="p">(</span><span class="nx">entry_source</span><span class="p">,</span> <span class="o">not</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">replay_on_load</span><span class="p">)</span> <span class="k">for</span> <span class="nx">entry_source</span> <span class="k">in</span> <span class="nx">previous_data</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-45'>
+    </tr><tr id='section-46'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-45">#</a>
+          <a class="octothorpe" href="#section-46">#</a>
         </div>
         <h3>replayHistory</h3>
 <p>Clear the display of the history and excute each item in the history.</p>
@@ -552,20 +564,20 @@ settings.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">replayHistory = </span><span class="o">-&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-46'>
+    </tr><tr id='section-47'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-46">#</a>
+          <a class="octothorpe" href="#section-47">#</a>
         </div>
         <p>Build the list of commands to replay.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nv">entries_to_replay = </span><span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">source</span> <span class="k">for</span> <span class="nx">entry</span> <span class="k">in</span> <span class="nx">history</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-47'>
+    </tr><tr id='section-48'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-47">#</a>
+          <a class="octothorpe" href="#section-48">#</a>
         </div>
         <p>Clear the current history.</p>
       </td>
@@ -574,20 +586,20 @@ settings.</p>
     <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">empty</span><span class="p">()</span>
     <span class="nv">history_index = </span><span class="mi">0</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-48'>
+    </tr><tr id='section-49'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-48">#</a>
+          <a class="octothorpe" href="#section-49">#</a>
         </div>
         <p>Execute the previous entries. </p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">execute</span><span class="p">(</span><span class="nx">entry</span><span class="p">)</span> <span class="k">for</span> <span class="nx">entry</span> <span class="k">in</span> <span class="nx">entries_to_replay</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-49'>
+    </tr><tr id='section-50'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-49">#</a>
+          <a class="octothorpe" href="#section-50">#</a>
         </div>
         <h3>execute</h3>
 <p>Compile and evaluate the specified CoffeeScript source string. Optionally,
@@ -596,10 +608,10 @@ the execution can be a dry run and the source won't actually be executed.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">execute = </span><span class="nf">(source, dry_run=false) -&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-50'>
+    </tr><tr id='section-51'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-50">#</a>
+          <a class="octothorpe" href="#section-51">#</a>
         </div>
         <p>If the command is to clear localStorage, just clear the history instead.
 Otherwise, the localStorage will be cleared, but the history remains in
@@ -610,10 +622,10 @@ memory and would be replaced into localStorage, negating the command.</p>
         <span class="nx">clearHistory</span><span class="p">()</span>
     <span class="k">else</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-51'>
+    </tr><tr id='section-52'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-51">#</a>
+          <a class="octothorpe" href="#section-52">#</a>
         </div>
         <p>Clear the displayed history list if history is empty.</p>
       </td>
@@ -622,10 +634,10 @@ memory and would be replaced into localStorage, negating the command.</p>
             <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">empty</span><span class="p">()</span>
         </pre></div></pre></div>
       </td>
-    </tr><tr id='section-52'>
+    </tr><tr id='section-53'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-52">#</a>
+          <a class="octothorpe" href="#section-53">#</a>
         </div>
         <p>Reset the index for the history's arrow-navigation.</p>
       </td>
@@ -636,10 +648,10 @@ memory and would be replaced into localStorage, negating the command.</p>
         <span class="nv">cs_error = </span><span class="kc">false</span>
         <span class="nv">js_error = </span><span class="kc">false</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-53'>
+    </tr><tr id='section-54'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-53">#</a>
+          <a class="octothorpe" href="#section-54">#</a>
         </div>
         <p>Attempt to compile the CoffeeScript source, using <code>bare: on</code> so that
 it's not wrapped in a closure and the output can be captured.</p>
@@ -651,10 +663,10 @@ it's not wrapped in a closure and the output can be captured.</p>
             <span class="nv">cs_error = </span><span class="kc">true</span>
             <span class="nv">error_output = </span><span class="nx">error</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-54'>
+    </tr><tr id='section-55'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-54">#</a>
+          <a class="octothorpe" href="#section-55">#</a>
         </div>
         <p>If the source compiled cleanly, and not doing a dry run, try
 evaluating the JavaScript in the global context.</p>
@@ -667,10 +679,10 @@ evaluating the JavaScript in the global context.</p>
                 <span class="nv">js_error = </span><span class="kc">true</span>
                 <span class="nv">error_output = </span><span class="nx">eval_error</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-55'>
+    </tr><tr id='section-56'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-55">#</a>
+          <a class="octothorpe" href="#section-56">#</a>
         </div>
         <p>If doing a dry run, the result is just the compiled CoffeeScript.</p>
       </td>
@@ -678,10 +690,10 @@ evaluating the JavaScript in the global context.</p>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="k">else</span> <span class="k">if</span> <span class="nx">dry_run</span>
             <span class="nv">result = </span><span class="nx">compiled_js</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-56'>
+    </tr><tr id='section-57'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-56">#</a>
+          <a class="octothorpe" href="#section-57">#</a>
         </div>
         <p>If there is an error, that becomes the result.</p>
       </td>
@@ -689,10 +701,10 @@ evaluating the JavaScript in the global context.</p>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="k">if</span> <span class="nx">error_output</span><span class="o">?</span>
             <span class="nv">result = </span><span class="nx">error_output</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-57'>
+    </tr><tr id='section-58'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-57">#</a>
+          <a class="octothorpe" href="#section-58">#</a>
         </div>
         <p>Add the source and corresponding result to the history.</p>
       </td>
@@ -702,21 +714,22 @@ evaluating the JavaScript in the global context.</p>
             <span class="nv">source: </span><span class="nx">source</span>
         </pre></div></pre></div>
       </td>
-    </tr><tr id='section-58'>
-      <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-58">#</a>
-        </div>
-        <p>Prepare the list item for this history entry.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre>        <span class="nv">this_result_index = </span><span class="nx">history</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="nv">new_li = </span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;li class=&#39;#{ typeof result }&#39;&gt;#{ this_result_index }: #{ result }&lt;/li&gt;&quot;</span><span class="p">)</span></pre></div></pre></div>
-      </td>
     </tr><tr id='section-59'>
       <td class=docs>
         <div class="octowrap">
           <a class="octothorpe" href="#section-59">#</a>
+        </div>
+        <p>Prepare the list item for this history entry. The result is inserted
+using jQuery's .text to ensure proper escaping.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>        <span class="nv">this_result_index = </span><span class="nx">history</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="nv">new_li = </span><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;li class=&#39;#{ typeof result }&#39;&gt;&lt;/li&gt;&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s2">&quot;#{ this_result_index }: #{ result }&quot;</span><span class="p">)</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-60'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-60">#</a>
         </div>
         <p>Set the appropriate classes if there were an error.</p>
       </td>
@@ -726,10 +739,10 @@ evaluating the JavaScript in the global context.</p>
         <span class="k">else</span> <span class="k">if</span> <span class="nx">cs_error</span>
             <span class="nx">new_li</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;cs-error&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-60'>
+    </tr><tr id='section-61'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-60">#</a>
+          <a class="octothorpe" href="#section-61">#</a>
         </div>
         <p>When the history entry is clicked, load the source for that entry.</p>
       </td>
@@ -738,20 +751,20 @@ evaluating the JavaScript in the global context.</p>
             <span class="nx">loadPrevious</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="nx">this_result_index</span><span class="p">)</span>
             <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">focus</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-61'>
+    </tr><tr id='section-62'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-61">#</a>
+          <a class="octothorpe" href="#section-62">#</a>
         </div>
         <p>Add the history entry to the history list</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="nx">new_li</span><span class="p">.</span><span class="nx">prependTo</span><span class="p">(</span><span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-62'>
+    </tr><tr id='section-63'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-62">#</a>
+          <a class="octothorpe" href="#section-63">#</a>
         </div>
         <p>If localStorage is supported, save the current history to the key
 specified by settings.</p>
@@ -763,10 +776,10 @@ specified by settings.</p>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">clear_history</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">replay_history</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-63'>
+    </tr><tr id='section-64'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-63">#</a>
+          <a class="octothorpe" href="#section-64">#</a>
         </div>
         <h3>clearHistory</h3>
 <p>Empty the history in memory, disk, and page.</p>
@@ -774,10 +787,10 @@ specified by settings.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">clearHistory = </span><span class="o">-&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-64'>
+    </tr><tr id='section-65'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-64">#</a>
+          <a class="octothorpe" href="#section-65">#</a>
         </div>
         <p>Clear the displayed history.</p>
       </td>
@@ -785,10 +798,10 @@ specified by settings.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">empty</span><span class="p">()</span>
     </pre></div></pre></div>
       </td>
-    </tr><tr id='section-65'>
+    </tr><tr id='section-66'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-65">#</a>
+          <a class="octothorpe" href="#section-66">#</a>
         </div>
         <p>Clear the in-memory history.</p>
       </td>
@@ -796,22 +809,22 @@ specified by settings.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nv">history = </span><span class="p">[]</span>
     </pre></div></pre></div>
       </td>
-    </tr><tr id='section-66'>
+    </tr><tr id='section-67'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-66">#</a>
+          <a class="octothorpe" href="#section-67">#</a>
         </div>
         <p>Clear the history persisted in localStorage, if any.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">localStorage</span><span class="o">?</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">settings</span><span class="p">.</span><span class="nx">ls_key</span><span class="p">)</span>
 
-    <span class="nx">appendInstructions</span><span class="p">()</span></pre></div></pre></div>
+    <span class="nx">renderInstructions</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-67'>
+    </tr><tr id='section-68'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-67">#</a>
+          <a class="octothorpe" href="#section-68">#</a>
         </div>
         <p>Reset the auto-suggest.</p>
       </td>
@@ -819,10 +832,10 @@ specified by settings.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nv">autosuggest = </span><span class="p">[[</span><span class="nb">window</span><span class="p">,</span><span class="s1">&#39;window&#39;</span><span class="p">]]</span>
     <span class="nv">autsuggest_query = </span><span class="s1">&#39;&#39;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-68'>
+    </tr><tr id='section-69'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-68">#</a>
+          <a class="octothorpe" href="#section-69">#</a>
         </div>
         <p>Hide the history controls.</p>
       </td>
@@ -830,27 +843,27 @@ specified by settings.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">clear_history</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
     <span class="nx">$els</span><span class="p">.</span><span class="nx">replay_history</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-69'>
-      <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-69">#</a>
-        </div>
-        <h3>appendInstructions</h3>
-<p>Show instructions for how to use the widget, depending on multi-line setting.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">appendInstructions = </span><span class="o">-&gt;</span>
-    <span class="k">if</span> <span class="nx">history</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">multi_line</span>
-            <span class="nv">instructions = </span><span class="s1">&#39;type CoffeeScript, press shift+enter&#39;</span>
-        <span class="k">else</span>
-            <span class="nv">instructions = </span><span class="s1">&#39;type CoffeeScript, press enter&#39;</span> 
-        <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&lt;li class=&#39;instructions&#39;&gt;#{ instructions }&lt;/li&gt;&quot;</span><span class="p">)</span></pre></div></pre></div>
-      </td>
     </tr><tr id='section-70'>
       <td class=docs>
         <div class="octowrap">
           <a class="octothorpe" href="#section-70">#</a>
+        </div>
+        <h3>renderInstructions</h3>
+<p>Show instructions for how to use the widget, depending on multi-line setting.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">renderInstructions = </span><span class="o">-&gt;</span>
+    <span class="k">if</span> <span class="nx">history</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nx">showing_multi_line</span>
+            <span class="nv">instructions = </span><span class="s1">&#39;type CoffeeScript, press &lt;shift+enter&gt;&#39;</span>
+        <span class="k">else</span>
+            <span class="nv">instructions = </span><span class="s1">&#39;type CoffeeScript, press &lt;enter&gt;&#39;</span> 
+        <span class="nx">$els</span><span class="p">.</span><span class="nx">instructions</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">instructions</span><span class="p">)</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-71'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-71">#</a>
         </div>
         <h3>loadPrevious</h3>
 <p>Given a history index to load, set the current source input to that entry's
@@ -862,10 +875,10 @@ source. Supports going either direction through the history; pass <code>true</co
     <span class="k">if</span> <span class="nx">target_index</span><span class="o">?</span>
         <span class="nv">history_index = </span><span class="nx">target_index</span> <span class="o">+</span> <span class="mi">1</span> </pre></div></pre></div>
       </td>
-    </tr><tr id='section-71'>
+    </tr><tr id='section-72'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-71">#</a>
+          <a class="octothorpe" href="#section-72">#</a>
         </div>
         <p>Currently not "inside" the history, so start at the most recent entry.</p>
       </td>
@@ -879,10 +892,10 @@ source. Supports going either direction through the history; pass <code>true</co
             <span class="nx">history_index</span> <span class="o">-=</span> <span class="mi">1</span>
     </pre></div></pre></div>
       </td>
-    </tr><tr id='section-72'>
+    </tr><tr id='section-73'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-72">#</a>
+          <a class="octothorpe" href="#section-73">#</a>
         </div>
         <p>If the selected index is "inside" the history list (eg -1), load the
 entry at that index.</p>
@@ -891,10 +904,10 @@ entry at that index.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="k">if</span> <span class="nx">history</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">history</span><span class="p">[</span><span class="nx">history_index</span><span class="p">].</span><span class="nx">source</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-73'>
+    </tr><tr id='section-74'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-73">#</a>
+          <a class="octothorpe" href="#section-74">#</a>
         </div>
         <p>Keep the cursor at the start of the textarea, so the user can
 continue to step through using the arrows.</p>
@@ -903,10 +916,10 @@ continue to step through using the arrows.</p>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="nv">$els.textarea.selectionStart = </span><span class="mi">0</span>
         <span class="nv">$els.textarea.selectionEnd = </span><span class="mi">0</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-74'>
+    </tr><tr id='section-75'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-74">#</a>
+          <a class="octothorpe" href="#section-75">#</a>
         </div>
         <h3>toggleMultiline</h3>
 <p>Switch between single-line and multi-line modes, disabling auto-suggest if in
@@ -916,10 +929,10 @@ multi-line mode.</p>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">toggleMultiLine = </span><span class="o">-&gt;</span>
     <span class="nv">showing_multi_line = </span><span class="o">not</span> <span class="nx">showing_multi_line</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-75'>
+    </tr><tr id='section-76'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-75">#</a>
+          <a class="octothorpe" href="#section-76">#</a>
         </div>
         <p>Set height to larger and hide auto-suggest...</p>
       </td>
@@ -928,10 +941,10 @@ multi-line mode.</p>
         <span class="nv">new_height = </span><span class="s1">&#39;4em&#39;</span>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-76'>
+    </tr><tr id='section-77'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-76">#</a>
+          <a class="octothorpe" href="#section-77">#</a>
         </div>
         <p>...or reset height and show auto-suggest, if enabled.</p>
       </td>
@@ -942,12 +955,31 @@ multi-line mode.</p>
             <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span>
 
     <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span><span class="nx">new_height</span><span class="p">).</span><span class="nx">focus</span><span class="p">()</span>
-    <span class="nx">appendInstructions</span><span class="p">()</span></pre></div></pre></div>
+    <span class="nx">renderInstructions</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-77'>
+    </tr><tr id='section-78'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-77">#</a>
+          <a class="octothorpe" href="#section-78">#</a>
+        </div>
+        <h3>resizeWidget</h3>
+<p>Set the max-height and max-width of the widget and auto-suggest list to keep
+it visible in the window. (Being absolutely positioned, it doesn't affect the
+scrolling of the overall window.)</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">resizeWidget = </span><span class="o">-&gt;</span>
+    <span class="nv">height = </span><span class="s2">&quot;#{ window.innerHeight - 140 }px&quot;</span>
+    <span class="nv">width = </span><span class="s2">&quot;#{ window.innerWidth - 255 }px&quot;</span>
+    <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">css</span>
+        <span class="s1">&#39;max-height&#39;</span>    <span class="o">:</span> <span class="nx">height</span>
+        <span class="s1">&#39;max-width&#39;</span>     <span class="o">:</span> <span class="nx">width</span>
+    <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;max-height&#39;</span><span class="p">,</span><span class="nx">height</span><span class="p">)</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-79'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-79">#</a>
         </div>
         <h3>renderWidget</h3>
 <p>Build and display the widget elements.</p>
@@ -955,20 +987,20 @@ multi-line mode.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">renderWidget = </span><span class="o">-&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-78'>
+    </tr><tr id='section-80'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-78">#</a>
+          <a class="octothorpe" href="#section-80">#</a>
         </div>
         <p>Load the template into a jQuery object.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nv">widget = </span><span class="nx">$</span><span class="p">(</span><span class="nx">template</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-79'>
+    </tr><tr id='section-81'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-79">#</a>
+          <a class="octothorpe" href="#section-81">#</a>
         </div>
         <p>Capture all the elements for later reference.</p>
       </td>
@@ -984,13 +1016,14 @@ multi-line mode.</p>
         <span class="nv">replay_history      : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span.replay&#39;</span><span class="p">)</span>
         <span class="nv">a                   : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
         <span class="nv">toggle_multiline    : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
-        <span class="nv">p                   : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+        <span class="nv">p                   : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;p.mode&#39;</span><span class="p">)</span>
+        <span class="nv">instructions        : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;p.instructions&#39;</span><span class="p">)</span>
         <span class="nv">li                  : </span><span class="nx">widget</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-80'>
+    </tr><tr id='section-82'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-80">#</a>
+          <a class="octothorpe" href="#section-82">#</a>
         </div>
         <p>Apply these styles programmatically so they can be customized in settings.</p>
       </td>
@@ -1000,14 +1033,14 @@ multi-line mode.</p>
         <span class="s1">&#39;top&#39;</span>               <span class="o">:</span> <span class="s2">&quot;#{ settings.widget_top }&quot;</span>
         <span class="s1">&#39;right&#39;</span>             <span class="o">:</span> <span class="s2">&quot;#{ settings.widget_right }&quot;</span>
 
-    <span class="nx">appendInstructions</span><span class="p">()</span>
+    <span class="nx">renderInstructions</span><span class="p">()</span>
     <span class="nx">bindEvents</span><span class="p">()</span>
     <span class="nx">widget</span><span class="p">.</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-81'>
+    </tr><tr id='section-83'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-81">#</a>
+          <a class="octothorpe" href="#section-83">#</a>
         </div>
         <h3>bindEvents</h3>
 <p>Setup the various events for the control elements.</p>
@@ -1015,10 +1048,10 @@ multi-line mode.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">bindEvents = </span><span class="o">-&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-82'>
+    </tr><tr id='section-84'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-82">#</a>
+          <a class="octothorpe" href="#section-84">#</a>
         </div>
         <p>Toggle the main edit elements of the widget.</p>
       </td>
@@ -1035,10 +1068,10 @@ multi-line mode.</p>
             <span class="nx">$els</span><span class="p">.</span><span class="nx">p</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
             <span class="nx">$els</span><span class="p">.</span><span class="nx">button</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-83'>
+    </tr><tr id='section-85'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-83">#</a>
+          <a class="octothorpe" href="#section-85">#</a>
         </div>
         <p>Clear history on demand.</p>
       </td>
@@ -1047,20 +1080,20 @@ multi-line mode.</p>
         <span class="nx">clearHistory</span><span class="p">()</span>
     </pre></div></pre></div>
       </td>
-    </tr><tr id='section-84'>
+    </tr><tr id='section-86'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-84">#</a>
+          <a class="octothorpe" href="#section-86">#</a>
         </div>
         <p>Replay history on demand.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">replay_history</span><span class="p">.</span><span class="nx">click</span> <span class="o">-&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-85'>
+    </tr><tr id='section-87'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-85">#</a>
+          <a class="octothorpe" href="#section-87">#</a>
         </div>
         <p>Empty the list now and replay after a slight delay, so there is a
 visual indication that something happened.</p>
@@ -1071,10 +1104,10 @@ visual indication that something happened.</p>
             <span class="nx">replayHistory</span><span class="p">()</span>
         <span class="p">,</span> <span class="mi">100</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-86'>
+    </tr><tr id='section-88'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-86">#</a>
+          <a class="octothorpe" href="#section-88">#</a>
         </div>
         <p>Toggle multi-line mode on demand.</p>
       </td>
@@ -1082,10 +1115,10 @@ visual indication that something happened.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">toggle_multiline</span><span class="p">.</span><span class="nx">click</span> <span class="o">-&gt;</span>
         <span class="nx">toggleMultiLine</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-87'>
+    </tr><tr id='section-89'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-87">#</a>
+          <a class="octothorpe" href="#section-89">#</a>
         </div>
         <p>Bind main textarea events to keydown for quicker responsiveness.</p>
       </td>
@@ -1093,10 +1126,10 @@ visual indication that something happened.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">bind</span> <span class="s1">&#39;keydown&#39;</span><span class="p">,</span> <span class="nf">(e) -&gt;</span>
         <span class="nv">entered_source = </span><span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-88'>
+    </tr><tr id='section-90'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-88">#</a>
+          <a class="octothorpe" href="#section-90">#</a>
         </div>
         <p>If the cursor is at the start of the textarea and the up or down
 arrows are pressed, step through the history.</p>
@@ -1108,10 +1141,10 @@ arrows are pressed, step through the history.</p>
             <span class="k">else</span> <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">is</span> <span class="nx">keycode</span><span class="p">.</span><span class="nx">DOWN</span>
                 <span class="nx">loadPrevious</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-89'>
+    </tr><tr id='section-91'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-89">#</a>
+          <a class="octothorpe" href="#section-91">#</a>
         </div>
         <p>If enter was pressed and in single-line mode or the shift key was
 pressed, and the source isn't blank, execute it and clear the input.</p>
@@ -1123,30 +1156,30 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
                 <span class="nx">execute</span><span class="p">(</span><span class="nx">entered_source</span><span class="p">)</span>
                 <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-90'>
+    </tr><tr id='section-92'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-90">#</a>
+          <a class="octothorpe" href="#section-92">#</a>
         </div>
         <p>Treat tab the way a text-editor should.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="k">else</span> <span class="k">if</span> <span class="nx">e</span><span class="p">.</span><span class="nx">which</span> <span class="o">is</span> <span class="nx">keycode</span><span class="p">.</span><span class="nx">TAB</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-91'>
+    </tr><tr id='section-93'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-91">#</a>
+          <a class="octothorpe" href="#section-93">#</a>
         </div>
         <p>Prevent the textarea losing focus.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>            <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-92'>
+    </tr><tr id='section-94'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-92">#</a>
+          <a class="octothorpe" href="#section-94">#</a>
         </div>
         <p>Insert the specified indent characters at cursor location.</p>
       </td>
@@ -1157,10 +1190,10 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
             <span class="vi">@selectionStart = </span><span class="nx">start</span> <span class="o">+</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">indent</span><span class="p">.</span><span class="nx">length</span>
             <span class="vi">@selectionEnd = </span><span class="nx">start</span> <span class="o">+</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">indent</span><span class="p">.</span><span class="nx">length</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-93'>
+    </tr><tr id='section-95'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-93">#</a>
+          <a class="octothorpe" href="#section-95">#</a>
         </div>
         <p>Bind auto-suggest to keyup for better overall performance.</p>
       </td>
@@ -1168,10 +1201,10 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">bind</span> <span class="s1">&#39;keyup&#39;</span><span class="p">,</span> <span class="nf">(e) -&gt;</span>
         <span class="nv">entered_source = </span><span class="nx">$els</span><span class="p">.</span><span class="nx">textarea</span><span class="p">.</span><span class="nx">val</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-94'>
+    </tr><tr id='section-96'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-94">#</a>
+          <a class="octothorpe" href="#section-96">#</a>
         </div>
         <p>Only run auto-suggest if enabled and widget is in single-line mode.</p>
       </td>
@@ -1179,10 +1212,10 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
         <div class='highlight'><pre><div class="highlight"><pre>        <span class="k">if</span> <span class="o">not</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">multi_line</span> <span class="o">and</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">auto_suggest</span>
             <span class="nx">buildAutosuggest</span><span class="p">(</span><span class="nx">entered_source</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-95'>
+    </tr><tr id='section-97'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-95">#</a>
+          <a class="octothorpe" href="#section-97">#</a>
         </div>
         <p>Set the initial multi-line state based on the settings.</p>
       </td>
@@ -1190,28 +1223,55 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="k">if</span> <span class="nx">settings</span><span class="p">.</span><span class="nx">multi_line</span>
         <span class="nx">$els</span><span class="p">.</span><span class="nx">toggle_multiline</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-96'>
+    </tr><tr id='section-98'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-96">#</a>
+          <a class="octothorpe" href="#section-98">#</a>
         </div>
         <p>Keep the auto-suggest and history lists within the window.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">resize</span> <span class="o">-&gt;</span>
-        <span class="nv">height = </span><span class="s2">&quot;#{ window.innerHeight - 140 }px&quot;</span>
-        <span class="nv">width = </span><span class="s2">&quot;#{ window.innerWidth - 255 }px&quot;</span>
-        <span class="nx">$els</span><span class="p">.</span><span class="nx">autosuggest_list</span><span class="p">.</span><span class="nx">css</span>
-            <span class="s1">&#39;max-height&#39;</span>    <span class="o">:</span> <span class="nx">height</span>
-            <span class="s1">&#39;max-width&#39;</span>     <span class="o">:</span> <span class="nx">width</span>
-        <span class="nx">$els</span><span class="p">.</span><span class="nx">history_list</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;max-height&#39;</span><span class="p">,</span><span class="nx">height</span><span class="p">)</span></pre></div></pre></div>
+        <span class="nx">resizeWidget</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-97'>
+    </tr><tr id='section-99'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-97">#</a>
+          <a class="octothorpe" href="#section-99">#</a>
+        </div>
+        <h3>unloadWidget</h3>
+<p>Remove the widget's element from the DOM.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">unloadWidget = </span><span class="nf">() -&gt;</span>
+    <span class="nx">$els</span><span class="p">.</span><span class="nx">widget</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-100'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-100">#</a>
         </div>
         <h2>Export the API</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-101'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-101">#</a>
+        </div>
+        <p>Unload any previous widget</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nx">CoffeeTable</span><span class="o">?</span><span class="p">.</span><span class="nx">unload</span><span class="p">()</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-102'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-102">#</a>
+        </div>
+        <p>Reassign the API functions</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nb">window</span><span class="p">.</span><span class="nv">CoffeeTable =</span>
@@ -1233,22 +1293,27 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
     <span class="nv">init: </span><span class="nf">(opts) -&gt;</span>
         <span class="nx">setSettings</span><span class="p">(</span><span class="nx">opts</span><span class="p">)</span>
         <span class="nx">preInit</span><span class="p">()</span>
-        <span class="k">return</span> <span class="k">this</span></pre></div></pre></div>
+        <span class="k">return</span> <span class="k">this</span>
+    <span class="nv">unload: </span><span class="o">-&gt;</span>
+        <span class="nx">unloadWidget</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">this</span>
+    <span class="nv">active: </span><span class="o">-&gt;</span>
+        <span class="k">return</span> <span class="nx">active</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-98'>
+    </tr><tr id='section-103'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-98">#</a>
+          <a class="octothorpe" href="#section-103">#</a>
         </div>
         <h2>Loading</h2>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre></pre></div></pre></div>
       </td>
-    </tr><tr id='section-99'>
+    </tr><tr id='section-104'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-99">#</a>
+          <a class="octothorpe" href="#section-104">#</a>
         </div>
         <h3>setSettings</h3>
 <p>Load the default settings and apply user overrides.</p>
@@ -1259,10 +1324,10 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
     <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="k">of</span> <span class="nx">opts</span>
         <span class="nx">settings</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-100'>
+    </tr><tr id='section-105'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-100">#</a>
+          <a class="octothorpe" href="#section-105">#</a>
         </div>
         <h3>loadScript</h3>
 <p>Helper for loading external scripts.</p>
@@ -1270,10 +1335,10 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">loadScript = </span><span class="nf">(script_name) -&gt;</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-101'>
+    </tr><tr id='section-106'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-101">#</a>
+          <a class="octothorpe" href="#section-106">#</a>
         </div>
         <p>Do all the traversing and manipulation directly, since jQuery may not
 be available yet.</p>
@@ -1289,32 +1354,22 @@ be available yet.</p>
         <span class="nx">init</span><span class="p">()</span>
     <span class="nx">head</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">script</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-102'>
+    </tr><tr id='section-107'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-102">#</a>
+          <a class="octothorpe" href="#section-107">#</a>
         </div>
         <h3>preInit</h3>
 <p>Helper for prepping settings and checking if dependencies are loaded.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">preInit = </span><span class="o">-&gt;</span></pre></div></pre></div>
-      </td>
-    </tr><tr id='section-103'>
-      <td class=docs>
-        <div class="octowrap">
-          <a class="octothorpe" href="#section-103">#</a>
-        </div>
-        <p>Remove any previous widget.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">$els</span><span class="o">?</span><span class="p">.</span><span class="nx">widget</span><span class="o">?</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="nv">preInit = </span><span class="o">-&gt;</span>
     <span class="nv">active = </span><span class="kc">false</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-104'>
+    </tr><tr id='section-108'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-104">#</a>
+          <a class="octothorpe" href="#section-108">#</a>
         </div>
         <p>Check if jQuery and CoffeeScript have already been loaded.</p>
       </td>
@@ -1322,10 +1377,10 @@ be available yet.</p>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nv">loaded_scripts.jquery_js = </span><span class="nb">window</span><span class="p">.</span><span class="nx">jQuery</span><span class="o">?</span>
     <span class="nv">loaded_scripts.coffeescript_js = </span><span class="nb">window</span><span class="p">.</span><span class="nx">CoffeeScript</span><span class="o">?</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-105'>
+    </tr><tr id='section-109'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-105">#</a>
+          <a class="octothorpe" href="#section-109">#</a>
         </div>
         <p>If the scripts haven't been loaded, load them, or throw an error if
 loading is disabled in settings.</p>
@@ -1342,20 +1397,20 @@ loading is disabled in settings.</p>
         <span class="k">else</span>
             <span class="nx">loadScript</span><span class="p">(</span><span class="s1">&#39;jquery_js&#39;</span><span class="p">)</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-106'>
+    </tr><tr id='section-110'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-106">#</a>
+          <a class="octothorpe" href="#section-110">#</a>
         </div>
         <p>Try init here (in case the scripts are already loaded).</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre>    <span class="nx">init</span><span class="p">()</span></pre></div></pre></div>
       </td>
-    </tr><tr id='section-107'>
+    </tr><tr id='section-111'>
       <td class=docs>
         <div class="octowrap">
-          <a class="octothorpe" href="#section-107">#</a>
+          <a class="octothorpe" href="#section-111">#</a>
         </div>
         <h3>DOM ready event</h3>
 <p>Automatically load dependencies and initialize the widget, unless deferred.</p>

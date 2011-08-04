@@ -97,9 +97,9 @@
 <body>
     <div id="pointer">Click that <span>--------------&gt;</span></div>
     
-    <h1>CoffeeTable, v0.1.1</h1> 
+    <h1>CoffeeTable, v0.2.0pre</h1> 
  
-    <p>A drop-in workbench for experimentation, CoffeeTable provides a CoffeeScript-fluent console on a page, with persistent history and auto-suggest.</p>
+    <p>A drop-in workbench for experimentation, CoffeeTable provides a CoffeeScript-fluent console on a page, with persistent history and auto-suggest. Check it out in the top-right corner of your browser.</p>
  
     <ul>
         <li><a href="https://github.com/alecperkins/coffeetable">GitHub repo &raquo;</a></li>
@@ -146,9 +146,9 @@
     
     <p>Click the "CoffeeTable" button in the top-right. Enter CoffeeScript code in the textarea, and press <code>enter</code> to execute it. The output will be listed below. For multiline input, check the "multiline" box, then use <code>shift</code>+<code>enter</code> instead to execute code. <code>log</code> and <code>dir</code> are shortcuts to the <code>console</code> functions. <code>this</code> is the <code>window</code> object. Everything happens in the global context.</p>
     
-    <p>If localStorage is supported, CoffeeTable uses it to persist the history, which can then be <em>replayed</em>. By default the history is loaded but not executed. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
+    <p>If localStorage is supported, CoffeeTable uses it to persist the history, which can then be <em>replayed</em>. By default the history is loaded but not executed; the history entries will show as strings instead of their actual result types. Click on a history item to load the source that generated it. Also, you can indent 4 spaces using <code>tab</code>, and go through the history using the <code>up arrow</code>.</p>
     
-    <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object.</p> 
+    <p>There is basic auto-suggest when in single-line mode that enumerates the properties of the currently 'completed' object. To hide the auto-suggest pane, press <code>escape</code>.</p> 
 
     <h3>Bookmarklet</h3>
     <p>Drag this to your bookmarks toolbar for a bookmarklet that will load CoffeeScript onto whatever page you happen to be on:</p>
@@ -175,6 +175,8 @@
     <p>Only one widget can exist at a time. Calling <code>init</code> after the widget has loaded will reinitialize it, using the specified options.</p>
 
     <p><em>Note: the replaying of history, either on widget reload or on demand, can be dependent on the overall state of the page, and may not be idempotent.</em></p>
+
+    <p>To remove the widget from the DOM, call <code>CoffeeTable.unload()</code>.</p>
 
     <h3>Default settings:</h3>
     <pre>
