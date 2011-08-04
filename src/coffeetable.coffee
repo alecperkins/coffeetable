@@ -289,9 +289,10 @@ execute = (source, dry_run=false) ->
             result: result
             source: source
         
-        # Prepare the list item for this history entry.
+        # Prepare the list item for this history entry. The result is inserted
+        # using jQuery's .text to ensure proper escaping.
         this_result_index = history.length - 1
-        new_li = $("<li class='#{ typeof result }'>#{ this_result_index }: #{ result }</li>")
+        new_li = $("<li class='#{ typeof result }'></li>").text("#{ this_result_index }: #{ result }")
 
         # Set the appropriate classes if there were an error.
         if js_error

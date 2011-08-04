@@ -246,7 +246,7 @@
         source: source
       });
       this_result_index = history.length - 1;
-      new_li = $("<li class='" + (typeof result) + "'>" + this_result_index + ": " + result + "</li>");
+      new_li = $("<li class='" + (typeof result) + "'></li>").text("" + this_result_index + ": " + result);
       if (js_error) {
         new_li.addClass('js-error');
       } else if (cs_error) {
