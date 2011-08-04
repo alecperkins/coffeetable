@@ -22,7 +22,7 @@
         <div class="octowrap">
           <a class="octothorpe" href="#section-0">#</a>
         </div>
-        <h1>CoffeeTable v0.2.0pre</h1>
+        <h1>CoffeeTable v0.2.0</h1>
 <p>A drop-in, CoffeeScript-fluent console for web pages.</p>
 <ul>
 <li><a href="http://code.alecperkins.net/coffeetable">Demo + Instructions</a></li>
@@ -1240,11 +1240,12 @@ pressed, and the source isn't blank, execute it and clear the input.</p>
           <a class="octothorpe" href="#section-99">#</a>
         </div>
         <h3>unloadWidget</h3>
-<p>Remove the widget's element from the DOM.</p>
+<p>Remove the widget's element from the DOM and clear the <code>CoffeeTable</code> object.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="nv">unloadWidget = </span><span class="nf">() -&gt;</span>
-    <span class="nx">$els</span><span class="p">.</span><span class="nx">widget</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span></pre></div></pre></div>
+    <span class="nx">$els</span><span class="p">.</span><span class="nx">widget</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nv">CoffeeTable = </span><span class="kc">null</span></pre></div></pre></div>
       </td>
     </tr><tr id='section-100'>
       <td class=docs>

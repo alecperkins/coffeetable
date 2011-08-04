@@ -29,6 +29,10 @@
         a:hover {
             text-decoration: underline;
         }
+        p {
+            line-height: 150%;
+            margin: 1em 0;
+        }
         code, pre {
             background: #fbfbfb;
             border: 1px solid #ccc;
@@ -176,7 +180,7 @@
 
     <p><em>Note: the replaying of history, either on widget reload or on demand, can be dependent on the overall state of the page, and may not be idempotent.</em></p>
 
-    <p>To remove the widget from the DOM, call <code>CoffeeTable.unload()</code>.</p>
+    <p>To remove the widget from the DOM and <code>window</code>, call <code>CoffeeTable.unload()</code>.</p>
 
     <h3>Default settings:</h3>
     <pre>
