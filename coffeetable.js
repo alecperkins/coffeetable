@@ -14,7 +14,7 @@
   `<script type="application/javascript" src="http://code.alecperkins.net/coffeetable/coffeetable-min.js"></script>`
   ...and the widget will automatically initialize.
   
-  */  var $, $els, active, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderInstructions, renderWidget, replayHistory, resizeWidget, setSettings, settings, showing_multi_line, template, toggleMultiLine, _ref, _ref2;
+  */  var $, $els, active, bindEvents, buildAutosuggest, clearHistory, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderInstructions, renderWidget, replayHistory, resizeWidget, setSettings, settings, showing_multi_line, template, toggleMultiLine, unloadWidget, _ref, _ref2, _ref3;
   defaults = {
     autoload_coffee_script: true,
     autoload_jquery: true,
@@ -246,7 +246,7 @@
         source: source
       });
       this_result_index = history.length - 1;
-      new_li = $("<li class='" + (typeof result) + "'>" + this_result_index + ": " + result + "</li>");
+      new_li = $("<li class='" + (typeof result) + "'></li>").text("" + this_result_index + ": " + result);
       if (js_error) {
         new_li.addClass('js-error');
       } else if (cs_error) {
@@ -462,6 +462,17 @@
       return resizeWidget();
     });
   };
+  /*
+  Remove the widget's element from the DOM and clear the `CoffeeTable` object.
+  */
+  unloadWidget = function() {
+    $els.widget.remove();
+    window.CoffeeTable = null;
+    return delete window.CoffeeTable;
+  };
+  if ((_ref3 = window.CoffeeTable) != null) {
+    _ref3.unload();
+  }
   window.CoffeeTable = {
     show: function() {
       $els.widget.show();
@@ -487,6 +498,13 @@
       setSettings(opts);
       preInit();
       return this;
+    },
+    unload: function() {
+      unloadWidget();
+      return this;
+    },
+    active: function() {
+      return active;
     }
   };
   /*
@@ -522,12 +540,6 @@
   Helper for prepping settings and checking if dependencies are loaded.
   */
   preInit = function() {
-    var _ref3;
-    if ($els != null) {
-      if ((_ref3 = $els.widget) != null) {
-        _ref3.remove();
-      }
-    }
     active = false;
     loaded_scripts.jquery_js = window.jQuery != null;
     loaded_scripts.coffeescript_js = window.CoffeeScript != null;
