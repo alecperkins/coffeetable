@@ -71,6 +71,7 @@ keycode =
     ENTER       : 13
     TAB         : 9
     BACKSPACE   : 8
+    ESCAPE      : 27
 
 # Template for widget markup and style.
 # `__ID__` will be replaced by the setting for widget_id. This ID is used for
@@ -137,8 +138,9 @@ supplied text. Done by iterating over the objects loaded, starting with
 `window` and progressing through the subsequent properties.
 ###
 buildAutosuggest = (text, e) ->
-    # If the key is backspace and nothing is shown, clear auto-suggest list.
-    if e.which is keycode.BACKSPACE and text.length is 0 and $els.autosuggest_list.html().length isnt 0
+    # If the key is backspace and nothing is shown, or if the key is escape,
+    # clear auto-suggest list.
+    if e.which is keycode.ESCAPE or (e.which is keycode.BACKSPACE and text.length is 0 and $els.autosuggest_list.html().length isnt 0)
         $els.autosuggest_list.html('')
     else
         # Rudimentary parsing by splitting on the `.` delimiter and using the
