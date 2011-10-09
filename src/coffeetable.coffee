@@ -551,9 +551,6 @@ unloadWidget = () ->
 
 # ## Export the API
 
-# Unload any previous widget
-window.CoffeeTable?.unload()
-
 # Reassign the API functions
 window.CoffeeTable =
     show: ->
@@ -572,6 +569,7 @@ window.CoffeeTable =
         deferred = true
         return this
     init: (opts) ->
+        window.CoffeeTable?.unload() # Unload any previous widget
         setSettings(opts)
         preInit()
         return this
