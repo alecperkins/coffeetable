@@ -53,16 +53,14 @@ defaults =
     # Defaults to including a timestamp for extra (excessive?) uniqueness
     widget_id       : "CoffeeTable-#{ (new Date()).getTime() }"
 
-
-# Trap calls to console.log and console.dir if the console doesn't exist.
-# Lookin' at you, IE.
-console ?=
-    log: ->
-    dir: ->
-
-# Alias log and dir for shorter typing if log and dir aren't aready used.
-window.log ?= -> console.log arguments...
-window.dir ?= -> console.dir arguments...
+    # Alias log and dir for convenience.
+    alias_log       : true
+    alias_dir       : true
+    
+    # Adopt console.log and console.dir if they are not available in the
+    # browser. This is useful in browsers like IE.
+    adopt_log       : true
+    adopt_dir       : true
 
 # Keypress codes, for convenience.
 keycode =
@@ -120,6 +118,22 @@ init = (opts={}) ->
         # Use $ even if jQuery is in no-conflict mode
         $ = window.jQuery
 
+
+        if settings.adopt_log
+            console ?= {}
+            console.log = (args...) ->
+                ctLog(args...)
+
+        if settings.adopt_dir
+            console ?= {}
+            console.dir = (args...) ->
+
+        # Alias log and dir for shorter typing if log and dir aren't aready used.
+        if settings.alias_log
+            window.log ?= -> console.log arguments...
+        if settings.alias_dir
+            window.dir ?= -> console.dir arguments...
+
         # Apply the ID from settings to the template HTML and CSS.
         template = template.replace(/__ID__/g, settings.widget_id)
         renderWidget()
@@ -129,7 +143,29 @@ init = (opts={}) ->
             loadFromStorage()
 
         loaded = true
+    return loaded
 
+# ### ctLog
+###
+Log one or more values to the CoffeeTable widget. Used as the implementation of
+`console.log` if `settings.adopt_log` is `true` and `console.log` isn't already
+available.
+###
+ctLog = (args...) ->
+    for arg in args
+        do ->
+            output = arg.toString().replace(/\'/g,"\\'").replace(/\"/g,'\\"')
+            execute("'log: #{ output }'")
+    return
+
+# ### ctDir
+###
+Dir one or more values to the CoffeeTable widget. Used as the implementation of
+`console.dir` if `settings.adopt_dir` is `true` and `console.dir` isn't already
+available.
+###
+ctDir = (args...) ->
+    return
 
 # ### buildAutosuggest
 ###
@@ -578,6 +614,10 @@ window.CoffeeTable =
         return this
     active: ->
         return active
+    log: (args...) ->
+        ctLog(args...)
+    dir: (args...) ->
+        ctDir(args...)
 
 
 
