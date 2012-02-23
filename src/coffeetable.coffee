@@ -677,7 +677,7 @@ bindEvents = ->
 Remove the widget's element from the DOM and clear the `CoffeeTable` object.
 ###
 unloadWidget = () ->
-    $els.widget.remove()
+    $els?.widget.remove()
     window.CoffeeTable = null
     delete window.CoffeeTable
 
