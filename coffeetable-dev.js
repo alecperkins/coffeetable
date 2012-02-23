@@ -599,7 +599,7 @@ Load `coffeetable-min.js` into the page:
   */
 
   unloadWidget = function() {
-    $els.widget.remove();
+    if ($els != null) $els.widget.remove();
     window.CoffeeTable = null;
     return delete window.CoffeeTable;
   };
