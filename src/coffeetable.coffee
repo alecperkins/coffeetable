@@ -490,6 +490,10 @@ renderWidget = ->
     renderInstructions()
     bindEvents()
     widget.appendTo('body')
+    
+    # Do resize of the widget to ensure the contained elements can scroll
+    # correctly.
+    resizeWidget()
 
 
 # ### bindEvents
