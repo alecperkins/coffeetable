@@ -210,24 +210,28 @@ buildAutosuggest = (text, e) ->
             if token.length > 0
                 working_items.push([working_items[working_items.length-1][0][token], token])
 
-        # Set up the matching pattern to match the last token entered.
+        # Set up the matching pattern to match the last token entered. This
+        # process is wrapped in a try/catch to prevent faulty regex matches
+        # from polluting the console with (inconsequential) errors.
         match_list = []
-        to_match = new RegExp('^' + tokens[tokens.length-1])
+        try
+            to_match = new RegExp('^' + tokens[tokens.length-1])
 
-        # Iterate over the properties of the latest working_item, running the
-        # matching pattern against the name of each one, building a list of
-        # the properties that match.
-        for attribute, value of working_items[working_items.length-1][0]
-            matches = to_match.exec(attribute)
-            if matches?.length > 0
-                # Push the name and type of property (for color coding)
-                match_list.push([attribute, typeof value])
+            # Iterate over the properties of the latest working_item, running the
+            # matching pattern against the name of each one, building a list of
+            # the properties that match.
+            for attribute, value of working_items[working_items.length-1][0]
+                matches = to_match.exec(attribute)
+                if matches?.length > 0
+                    # Push the name and type of property (for color coding)
+                    match_list.push([attribute, typeof value])
 
-        # Sort the auto-suggest matches in ascending alphabetical order
-        match_list.sort()
-        
-        # Display the list of matches
-        renderAutosuggest(working_items, match_list)
+            # Sort the auto-suggest matches in ascending alphabetical order
+            match_list.sort()
+    
+            # Display the list of matches
+            renderAutosuggest(working_items, match_list)
+        catch e
 
 
 # ### renderAutosuggest

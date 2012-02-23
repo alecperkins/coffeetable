@@ -9,7 +9,7 @@ task 'build', 'compile coffee, minify js, build annotated source', ->
       throw err if err
       console.log stdout
       console.log stderr
-  exec 'python ~/forks/pycco/pycco/main.py coffeetable.coffee', (err, stdout, stderr) ->
-    throw err if err
-    console.log stdout
-    console.log stderr
+  # exec 'python ~/forks/pycco/pycco/main.py coffeetable.coffee', (err, stdout, stderr) ->
+  #   throw err if err
+  #   console.log stdout
+  #   console.log stderr
