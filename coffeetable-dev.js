@@ -185,17 +185,21 @@ Load `coffeetable-min.js` into the page:
         }
       }
       match_list = [];
-      to_match = new RegExp('^' + tokens[tokens.length - 1]);
-      _ref2 = working_items[working_items.length - 1][0];
-      for (attribute in _ref2) {
-        value = _ref2[attribute];
-        matches = to_match.exec(attribute);
-        if ((matches != null ? matches.length : void 0) > 0) {
-          match_list.push([attribute, typeof value]);
+      try {
+        to_match = new RegExp('^' + tokens[tokens.length - 1]);
+        _ref2 = working_items[working_items.length - 1][0];
+        for (attribute in _ref2) {
+          value = _ref2[attribute];
+          matches = to_match.exec(attribute);
+          if ((matches != null ? matches.length : void 0) > 0) {
+            match_list.push([attribute, typeof value]);
+          }
         }
+        match_list.sort();
+        return renderAutosuggest(working_items, match_list);
+      } catch (e) {
+
       }
-      match_list.sort();
-      return renderAutosuggest(working_items, match_list);
     }
   };
 
