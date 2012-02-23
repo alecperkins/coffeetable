@@ -54,22 +54,54 @@
         display         : none
     .history
         margin          : 8px
-        padding         : 4px 4px 4px 16px
+        padding         : 4px
         font-family     : monospace
         list-style-type : circle
         overflow-y      : scroll
         li
-            padding         : 4px
-            cursor          : pointer
+            padding         : 4px 1em 4px 4px
+            overflow        : hidden
+            text-overflow   : ellipsis
+            white-space     : nowrap
+            position        : relative
             &:hover
-                background-color    : rgba(255,255,0,0.2)
                 list-style-type     : disc
-            &:active
-                background-color    : rgba(255,255,0,0.8)
             &.cs-error
                 color   : orange
             &.js-error
                 color   : red
+            &.object span.result
+                cursor: pointer
+            &.property-value
+                list-style-type: none
+                span.property
+                    color: purple
+            li
+                padding-left: 3em
+            button
+                cursor: pointer
+            button.load
+                position    : absolute
+                right       : 0
+                top         : 0
+                border      : 1px solid #ccc
+                padding     : 2px
+                background  : white
+                &:hover
+                    background-color    : rgba(255,255,0,0.2)
+                &:active
+                    background-color    : rgba(255,255,0,0.8)
+            button.expand
+                background: transparent
+                border: 0
+                width: 1em
+            span.opened
+                display: none
+            &.open, &.open > span.value
+                > button span.opened
+                    display: inline
+                > button span.closed
+                    display: none
     p.instructions
         text-align          : center
     .clear, .replay
