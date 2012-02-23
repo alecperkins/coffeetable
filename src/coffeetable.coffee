@@ -1,6 +1,6 @@
 ###
 
-# CoffeeTable v0.2.0
+# CoffeeTable vDEV
 
 A drop-in, CoffeeScript-fluent console for web pages.
 
