@@ -16,7 +16,7 @@ Load `coffeetable-min.js` into the page:
 */
 
 (function() {
-  var $, $els, active, bindEvents, buildAutosuggest, clearHistory, ctDir, ctLog, defaults, deferred, execute, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderInstructions, renderWidget, replayHistory, resizeWidget, setSettings, settings, showing_multi_line, template, toggleMultiLine, unloadWidget,
+  var $, $els, active, bindEvents, buildAutosuggest, clearHistory, ctDir, ctExec, ctLog, defaults, deferred, execute, expandObject, history, history_index, init, keycode, loadFromStorage, loadPrevious, loadScript, loaded, loaded_scripts, preInit, renderAutosuggest, renderInstructions, renderWidget, replayHistory, resizeWidget, setSettings, settings, showing_multi_line, template, toggleMultiLine, unloadWidget,
     __slice = Array.prototype.slice;
 
   defaults = {
@@ -35,8 +35,6 @@ Load `coffeetable-min.js` into the page:
     widget_top: '5px',
     widget_right: '5px',
     widget_id: "CoffeeTable-" + ((new Date()).getTime()),
-    alias_log: true,
-    alias_dir: true,
     adopt_log: true,
     adopt_dir: true
   };
@@ -95,35 +93,25 @@ Load `coffeetable-min.js` into the page:
     if (opts == null) opts = {};
     if (loaded_scripts.jquery_js && loaded_scripts.coffeescript_js) {
       $ = window.jQuery;
-      if (settings.adopt_log) {
-        if (typeof console === "undefined" || console === null) console = {};
-        console.log = function() {
-          var args;
-          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-          return ctLog.apply(null, args);
-        };
-      }
-      if (settings.adopt_dir) {
-        if (typeof console === "undefined" || console === null) console = {};
-        console.dir = function() {
-          var args;
-          args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        };
-      }
-      if (settings.alias_log) {
-        if (window.log == null) {
-          window.log = function() {
-            return console.log.apply(console, arguments);
+      if ((settings.adopt_log || settings.adopt_dir) && !(window.console != null)) {
+        window.console = {};
+        if (settings.adopt_log) {
+          window.console.log = function() {
+            var args;
+            args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            return ctLog.apply(null, args);
+          };
+        }
+        if (settings.adopt_dir) {
+          window.console.dir = function() {
+            var args;
+            args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            return ctDir.apply(null, args);
           };
         }
       }
-      if (settings.alias_dir) {
-        if (window.dir == null) {
-          window.dir = function() {
-            return console.dir.apply(console, arguments);
-          };
-        }
-      }
+      window.log = ctLog;
+      window.dir = ctDir;
       template = template.replace(/__ID__/g, settings.widget_id);
       renderWidget();
       if (settings.local_storage) loadFromStorage();
@@ -134,7 +122,7 @@ Load `coffeetable-min.js` into the page:
 
   /*
   Log one or more values to the CoffeeTable widget. Used as the implementation of
-  `console.log` if `settings.adopt_log` is `true` and `console.log` isn't already
+  `console.log` if `settings.adopt_log` is `true` and `console.log` is not already
   available.
   */
 
@@ -154,13 +142,37 @@ Load `coffeetable-min.js` into the page:
 
   /*
   Dir one or more values to the CoffeeTable widget. Used as the implementation of
-  `console.dir` if `settings.adopt_dir` is `true` and `console.dir` isn't already
+  `console.dir` if `settings.adopt_dir` is `true` and `console.dir` is not already
   available.
   */
 
   ctDir = function() {
-    var args;
+    var arg, args, _i, _len;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    for (_i = 0, _len = args.length; _i < _len; _i++) {
+      arg = args[_i];
+      execute(arg, false, true);
+    }
+  };
+
+  /*
+  Takes in one or more strings of CoffeeScript code, which is then executed, in
+  order, by the widget. Returns the result of each execution in a list.
+  */
+
+  ctExec = function() {
+    var arg, args, results;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    results = (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = args.length; _i < _len; _i++) {
+        arg = args[_i];
+        _results.push(execute(arg));
+      }
+      return _results;
+    })();
+    return results;
   };
 
   /*
@@ -251,7 +263,7 @@ Load `coffeetable-min.js` into the page:
   */
 
   replayHistory = function() {
-    var entries_to_replay, entry, _i, _len, _results;
+    var entries_to_replay, entry, entry_source, _i, _len, _results;
     entries_to_replay = (function() {
       var _i, _len, _results;
       _results = [];
@@ -266,20 +278,89 @@ Load `coffeetable-min.js` into the page:
     history_index = 0;
     _results = [];
     for (_i = 0, _len = entries_to_replay.length; _i < _len; _i++) {
-      entry = entries_to_replay[_i];
-      _results.push(execute(entry));
+      entry_source = entries_to_replay[_i];
+      _results.push(execute(entry_source));
     }
     return _results;
   };
 
   /*
-  Compile and evaluate the specified CoffeeScript source string. Optionally,
-  the execution can be a dry run and the source won't actually be executed.
+  Given an element and result item, enumerate the properties of the result into
+  lists that can be expanded, recursively if the property is itself and object.
+  Used if the result is an object, and by the `dir` command.
   */
 
-  execute = function(source, dry_run) {
-    var assembleList, buildLI, clean_result, compiled_js, cs_error, entry, entry_sources, error_output, expand_button, expand_button_template, js_error, load_button, new_li, result, this_result_index;
+  expandObject = function(li, result) {
+    var assembleList, buildLI, expand_button, expand_button_template;
+    expand_button_template = '<button class="expand"><span class="closed">+</span><span class="opened">-</span></button>';
+    buildLI = function(prop, val) {
+      return $("<li class='property-value' title='" + (typeof val) + ": " + val + "'>\n    <span class='property'>" + prop + ":</span>\n    <span class='value " + (typeof val) + "'>" + val + "</span>\n</li>");
+    };
+    assembleList = function(obj, el) {
+      var children_ul, prop, prop_list, val, _i, _len, _results;
+      el.children('ul').remove();
+      children_ul = $('<ul></ul>');
+      el.append(children_ul);
+      prop_list = (function() {
+        var _results;
+        _results = [];
+        for (prop in obj) {
+          val = obj[prop];
+          _results.push(prop);
+        }
+        return _results;
+      })();
+      prop_list.sort();
+      _results = [];
+      for (_i = 0, _len = prop_list.length; _i < _len; _i++) {
+        prop = prop_list[_i];
+        _results.push((function() {
+          var child_expand_button, child_li, p_name, p_val;
+          p_name = prop;
+          p_val = obj[prop];
+          child_li = buildLI(p_name, p_val);
+          children_ul.append(child_li);
+          if (typeof p_val === 'object') {
+            child_expand_button = $(expand_button_template);
+            child_li.children('span.value').prepend(child_expand_button);
+            return child_expand_button.click(function(e) {
+              e.stopPropagation();
+              if (child_li.hasClass('open')) {
+                child_li.removeClass('open');
+                return child_li.find('ul').remove();
+              } else {
+                child_li.addClass('open');
+                children_ul.show();
+                return assembleList(p_val, child_li);
+              }
+            });
+          }
+        })());
+      }
+      return _results;
+    };
+    expand_button = $(expand_button_template);
+    li.children('span.result').before(expand_button);
+    return expand_button.click(function() {
+      if (li.hasClass('open')) {
+        li.removeClass('open');
+        return li.find('ul').remove();
+      } else {
+        li.addClass('open');
+        return assembleList(result, li);
+      }
+    });
+  };
+
+  /*
+  Compile and evaluate the specified CoffeeScript source string. Optionally,
+  the execution can be a dry run and the source will not actually be executed.
+  */
+
+  execute = function(source, dry_run, do_dir) {
+    var clean_result, compiled_js, cs_error, entry, entry_sources, error_output, js_error, load_button, new_li, result, this_result_index;
     if (dry_run == null) dry_run = false;
+    if (do_dir == null) do_dir = false;
     if (source === 'localStorage.clear()') {
       return clearHistory();
     } else {
@@ -288,97 +369,45 @@ Load `coffeetable-min.js` into the page:
       error_output = null;
       cs_error = false;
       js_error = false;
-      try {
-        compiled_js = CoffeeScript.compile(source, {
-          bare: true
-        });
-      } catch (error) {
-        cs_error = true;
-        error_output = error;
-      }
-      if (!(error_output != null) && !dry_run) {
+      result = '';
+      if (do_dir) {
+        result = source;
+        source = "'dir: " + (source.toString().replace("'", "\\'")) + "'";
+      } else {
         try {
-          result = eval.call(window, compiled_js);
-        } catch (eval_error) {
-          js_error = true;
-          error_output = eval_error;
+          compiled_js = CoffeeScript.compile(source, {
+            bare: true
+          });
+        } catch (error) {
+          cs_error = true;
+          error_output = error;
         }
-      } else if (dry_run) {
-        result = compiled_js;
+        if (!(error_output != null) && !dry_run) {
+          try {
+            result = eval.call(window, compiled_js);
+          } catch (eval_error) {
+            js_error = true;
+            error_output = eval_error;
+          }
+        } else if (dry_run) {
+          result = compiled_js;
+        }
       }
       if (error_output != null) result = error_output;
       history.push({
         result: result,
-        source: source
+        source: do_dir ? source.toString() : source
       });
       this_result_index = history.length - 1;
-      load_button = $('<button class="load">^</button>');
+      load_button = $("<button class='load' title='load: " + source + "'>^</button>");
       clean_result = result.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       new_li = $("<li class='" + (typeof result) + "' title='" + (typeof result) + ": " + clean_result + "'>\n    " + this_result_index + ":\n    <span class='result'>" + clean_result + "</span>\n</li>").append(load_button);
-      if (typeof result === 'object') {
-        expand_button_template = '<button class="expand"><span class="closed">+</span><span class="opened">-</span></button>';
-        buildLI = function(prop, val) {
-          return $("<li class='property-value' title='" + (typeof val) + ": " + val + "'>\n    <span class='property'>" + prop + ":</span>\n    <span class='value " + (typeof val) + "'>" + val + "</span>\n</li>");
-        };
-        assembleList = function(obj, el) {
-          var children_ul, prop, prop_list, val, _i, _len, _results;
-          el.children('ul').remove();
-          children_ul = $('<ul></ul>');
-          el.append(children_ul);
-          prop_list = (function() {
-            var _results;
-            _results = [];
-            for (prop in obj) {
-              val = obj[prop];
-              _results.push(prop);
-            }
-            return _results;
-          })();
-          prop_list.sort();
-          _results = [];
-          for (_i = 0, _len = prop_list.length; _i < _len; _i++) {
-            prop = prop_list[_i];
-            _results.push((function() {
-              var child_expand_button, child_li, p_name, p_val;
-              p_name = prop;
-              p_val = obj[prop];
-              child_li = buildLI(p_name, p_val);
-              children_ul.append(child_li);
-              if (typeof p_val === 'object') {
-                child_expand_button = $(expand_button_template);
-                child_li.children('span.value').prepend(child_expand_button);
-                return child_expand_button.click(function(e) {
-                  e.stopPropagation();
-                  if (child_li.hasClass('open')) {
-                    child_li.removeClass('open');
-                    return child_li.find('ul').remove();
-                  } else {
-                    child_li.addClass('open');
-                    children_ul.show();
-                    return assembleList(p_val, child_li);
-                  }
-                });
-              }
-            })());
-          }
-          return _results;
-        };
-        expand_button = $(expand_button_template);
-        new_li.children('span.result').before(expand_button);
-        expand_button.click(function() {
-          if (new_li.hasClass('open')) {
-            new_li.removeClass('open');
-            return new_li.find('ul').remove();
-          } else {
-            new_li.addClass('open');
-            return assembleList(result, new_li);
-          }
-        });
-      }
       if (js_error) {
         new_li.addClass('js-error');
       } else if (cs_error) {
         new_li.addClass('cs-error');
+      } else {
+        if (typeof result === 'object' || do_dir) expandObject(new_li, result);
       }
       load_button.click(function() {
         loadPrevious(false, this_result_index);
@@ -398,7 +427,8 @@ Load `coffeetable-min.js` into the page:
         localStorage.setItem(settings.ls_key, JSON.stringify(entry_sources));
       }
       $els.clear_history.show();
-      return $els.replay_history.show();
+      $els.replay_history.show();
+      return result;
     }
   };
 
@@ -437,9 +467,9 @@ Load `coffeetable-min.js` into the page:
   };
 
   /*
-  Given a history index to load, set the current source input to that entry's
-  source. Supports going either direction through the history; pass `true` for
-  `forward` to move forward in the list.
+  Given a history index to load, set the current source input to the source of
+  that entry. Supports going either direction through the history; pass `true`
+  for `forward` to move forward in the list.
   */
 
   loadPrevious = function(forward, target_index) {
@@ -482,7 +512,7 @@ Load `coffeetable-min.js` into the page:
 
   /*
   Set the max-height and max-width of the widget and auto-suggest list to keep
-  it visible in the window. (Being absolutely positioned, it doesn't affect the
+  it visible in the window. (Being absolutely positioned, it does not affect the
   scrolling of the overall window.)
   */
 
@@ -599,7 +629,7 @@ Load `coffeetable-min.js` into the page:
   };
 
   /*
-  Remove the widget's element from the DOM and clear the `CoffeeTable` object.
+  Remove the widget element from the DOM and clear the `CoffeeTable` object.
   */
 
   unloadWidget = function() {
@@ -646,12 +676,17 @@ Load `coffeetable-min.js` into the page:
     log: function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return ctLog.apply(null, args);
+      ctLog.apply(null, args);
     },
     dir: function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return ctDir.apply(null, args);
+      ctDir.apply(null, args);
+    },
+    exec: function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return ctExec.apply(null, args);
     }
   };
 

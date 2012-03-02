@@ -53,10 +53,6 @@ defaults =
     # Defaults to including a timestamp for extra (excessive?) uniqueness
     widget_id       : "CoffeeTable-#{ (new Date()).getTime() }"
 
-    # Alias log and dir for convenience.
-    alias_log       : true
-    alias_dir       : true
-    
     # Adopt console.log and console.dir if they are not available in the
     # browser. This is useful in browsers like IE.
     adopt_log       : true
@@ -134,21 +130,21 @@ init = (opts={}) ->
         # Use $ even if jQuery is in no-conflict mode
         $ = window.jQuery
 
+        # If window.console isn't present, and the widget is set to adopt log
+        # and dir methods, create a console object with those methods and pass
+        # them through to the internal log and dir methods.
+        if (settings.adopt_log or settings.adopt_dir) and not window.console?
+            window.console = {}
+            if settings.adopt_log
+                window.console.log = (args...) ->
+                    ctLog(args...)
+            if settings.adopt_dir
+                window.console.dir = (args...) ->
+                    ctDir(args...)
 
-        if settings.adopt_log
-            console ?= {}
-            console.log = (args...) ->
-                ctLog(args...)
-
-        if settings.adopt_dir
-            console ?= {}
-            console.dir = (args...) ->
-
-        # Alias log and dir for shorter typing if log and dir aren't aready used.
-        if settings.alias_log
-            window.log ?= -> console.log arguments...
-        if settings.alias_dir
-            window.dir ?= -> console.dir arguments...
+        # Alias log and dir for shorter typing
+        window.log = ctLog
+        window.dir = ctDir
 
         # Apply the ID from settings to the template HTML and CSS.
         template = template.replace(/__ID__/g, settings.widget_id)
@@ -164,7 +160,7 @@ init = (opts={}) ->
 # ### ctLog
 ###
 Log one or more values to the CoffeeTable widget. Used as the implementation of
-`console.log` if `settings.adopt_log` is `true` and `console.log` isn't already
+`console.log` if `settings.adopt_log` is `true` and `console.log` is not already
 available.
 ###
 ctLog = (args...) ->
@@ -177,11 +173,24 @@ ctLog = (args...) ->
 # ### ctDir
 ###
 Dir one or more values to the CoffeeTable widget. Used as the implementation of
-`console.dir` if `settings.adopt_dir` is `true` and `console.dir` isn't already
+`console.dir` if `settings.adopt_dir` is `true` and `console.dir` is not already
 available.
 ###
 ctDir = (args...) ->
+    for arg in args
+        execute(arg, false, true)
     return
+
+# ### ctExec
+###
+Takes in one or more strings of CoffeeScript code, which is then executed, in
+order, by the widget. Returns the result of each execution in a list.
+###
+ctExec = (args...) ->
+    results = (execute(arg) for arg in args)
+    return results
+
+
 
 # ### buildAutosuggest
 ###
@@ -290,15 +299,87 @@ replayHistory = ->
     history_index = 0
 
     # Execute the previous entries. 
-    execute(entry) for entry in entries_to_replay
+    for entry_source in entries_to_replay
+        execute(entry_source)
 
+# ### expandObject
+###
+Given an element and result item, enumerate the properties of the result into
+lists that can be expanded, recursively if the property is itself and object.
+Used if the result is an object, and by the `dir` command.
+###
+expandObject = (li, result) ->
+    # Each property that is an object gets an expand button, which
+    # toggles between '+' if closed and '-' if open.
+    expand_button_template = '<button class="expand"><span class="closed">+</span><span class="opened">-</span></button>'
+
+    # Create an LI element for the given property and value.
+    buildLI = (prop, val) ->
+        return $("""
+            <li class='property-value' title='#{ typeof val }: #{ val }'>
+                <span class='property'>#{ prop }:</span>
+                <span class='value #{ typeof val }'>#{ val }</span>
+            </li>
+        """)
+    
+    # List the properties of the given object, and append a UL with the
+    # properties to the given element.
+    assembleList = (obj, el) ->
+        # Remove any existing ULs to avoid duplication. Yes, this is
+        # redundant, but it keeps things simple.
+        el.children('ul').remove()
+        
+        # Make and append the UL
+        children_ul = $('<ul></ul>')
+        el.append(children_ul)
+        
+        # Create a list of properties, then sort it so they can be
+        # displayed in alphabetical order.
+        prop_list = (prop for prop, val of obj)
+        prop_list.sort()
+        
+        # Iterate over the sorted properties, building an LI and
+        # appending it to the list.
+        for prop in prop_list then do ->
+            p_name = prop
+            p_val = obj[prop]
+            child_li = buildLI(p_name, p_val)
+            children_ul.append(child_li)
+            
+            # If the property itself is an object, prepare it to be
+            # expandable as well.
+            # TODO: rework this whole system so it's more DRY.
+            if typeof p_val is 'object'
+                child_expand_button = $(expand_button_template)
+                child_li.children('span.value').prepend(child_expand_button)
+                child_expand_button.click (e) ->
+                    e.stopPropagation()
+                    if child_li.hasClass('open')
+                        child_li.removeClass('open')
+                        child_li.find('ul').remove()
+                    else
+                        child_li.addClass('open')
+                        children_ul.show()
+                        assembleList(p_val, child_li)
+    
+    # Create the expand button, append it to the LI, and setup the
+    # events that toggle the opening and closing of property lists.
+    expand_button = $(expand_button_template)
+    li.children('span.result').before(expand_button)
+    expand_button.click ->
+        if li.hasClass('open')
+            li.removeClass('open')
+            li.find('ul').remove()
+        else
+            li.addClass('open')
+            assembleList(result, li)
 
 # ### execute
 ###
 Compile and evaluate the specified CoffeeScript source string. Optionally,
-the execution can be a dry run and the source won't actually be executed.
+the execution can be a dry run and the source will not actually be executed.
 ###
-execute = (source, dry_run=false) ->
+execute = (source, dry_run=false, do_dir=false) ->
     # If the command is to clear localStorage, just clear the history instead.
     # Otherwise, the localStorage will be cleared, but the history remains in
     # memory and would be replaced into localStorage, negating the command.
@@ -308,33 +389,42 @@ execute = (source, dry_run=false) ->
         # Clear the displayed history list if history is empty.
         if history.length is 0
             $els.history_list.empty()
-        
+
         # Reset the index for the history's arrow-navigation.
         history_index = -1
 
         error_output = null
         cs_error = false
         js_error = false
+        result = ''
 
-        # Attempt to compile the CoffeeScript source, using `bare: on` so that
-        # it's not wrapped in a closure and the output can be captured.
-        try
-            compiled_js = CoffeeScript.compile(source, { bare: on })
-        catch error
-            cs_error = true
-            error_output = error
+        if do_dir
+            # If executing a `dir`, the result is the passed-in source, and the
+            # source to be saved is a string describing the `dir`. This means
+            # `dirs` using the widget cannot be replayed.
+            result = source
+            source = "'dir: #{ source.toString().replace("'","\\'") }'"
 
-        # If the source compiled cleanly, and not doing a dry run, try
-        # evaluating the JavaScript in the global context.
-        if not error_output? and not dry_run
+        else
+            # Attempt to compile the CoffeeScript source, using `bare: on` so that
+            # it's not wrapped in a closure and the output can be captured.
             try
-                result = eval.call(window, compiled_js)
-            catch eval_error
-                js_error = true
-                error_output = eval_error
-        # If doing a dry run, the result is just the compiled CoffeeScript.
-        else if dry_run
-            result = compiled_js
+                compiled_js = CoffeeScript.compile(source, { bare: on })
+            catch error
+                cs_error = true
+                error_output = error
+
+            # If the source compiled cleanly, and not doing a dry run, try
+            # evaluating the JavaScript in the global context.
+            if not error_output? and not dry_run
+                try
+                    result = eval.call(window, compiled_js)
+                catch eval_error
+                    js_error = true
+                    error_output = eval_error
+            # If doing a dry run, the result is just the compiled CoffeeScript.
+            else if dry_run
+                result = compiled_js
 
         # If there is an error, that becomes the result.
         if error_output?
@@ -343,13 +433,14 @@ execute = (source, dry_run=false) ->
         # Add the source and corresponding result to the history.
         history.push
             result: result
-            source: source
+            source: if do_dir then source.toString() else source
         
         # Prepare the list item for this history entry. The result is inserted
         # using jQuery's .text to ensure proper escaping.
         this_result_index = history.length - 1
         
-        load_button = $('<button class="load">^</button>')
+        load_button = $("<button class='load' title='load: #{ source }'>^</button>")
+
         clean_result = result.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
         new_li = $("""
             <li class='#{ typeof result }' title='#{ typeof result }: #{ clean_result }'>
@@ -358,80 +449,17 @@ execute = (source, dry_run=false) ->
             </li>
         """).append(load_button)
 
-        # Results that are objects can be expanded, with their properties
-        # enumerated in a list.
-        if typeof result is 'object'
-            # Each property that is an object gets an expand button, which
-            # toggles between '+' if closed and '-' if open.
-            expand_button_template = '<button class="expand"><span class="closed">+</span><span class="opened">-</span></button>'
-
-            # Create an LI element for the given property and value.
-            buildLI = (prop, val) ->
-                return $("""
-                    <li class='property-value' title='#{ typeof val }: #{ val }'>
-                        <span class='property'>#{ prop }:</span>
-                        <span class='value #{ typeof val }'>#{ val }</span>
-                    </li>
-                """)
-            
-            # List the properties of the given object, and append a UL with the
-            # properties to the given element.
-            assembleList = (obj, el) ->
-                # Remove any existing ULs to avoid duplication. Yes, this is
-                # redundant, but it keeps things simple.
-                el.children('ul').remove()
-                
-                # Make and append the UL
-                children_ul = $('<ul></ul>')
-                el.append(children_ul)
-                
-                # Create a list of properties, then sort it so they can be
-                # displayed in alphabetical order.
-                prop_list = (prop for prop, val of obj)
-                prop_list.sort()
-                
-                # Iterate over the sorted properties, building an LI and
-                # appending it to the list.
-                for prop in prop_list then do ->
-                    p_name = prop
-                    p_val = obj[prop]
-                    child_li = buildLI(p_name, p_val)
-                    children_ul.append(child_li)
-                    
-                    # If the property itself is an object, prepare it to be
-                    # expandable as well.
-                    # TODO: rework this whole system so it's more DRY.
-                    if typeof p_val is 'object'
-                        child_expand_button = $(expand_button_template)
-                        child_li.children('span.value').prepend(child_expand_button)
-                        child_expand_button.click (e) ->
-                            e.stopPropagation()
-                            if child_li.hasClass('open')
-                                child_li.removeClass('open')
-                                child_li.find('ul').remove()
-                            else
-                                child_li.addClass('open')
-                                children_ul.show()
-                                assembleList(p_val, child_li)
-            
-            # Create the expand button, append it to the LI, and setup the
-            # events that toggle the opening and closing of property lists.
-            expand_button = $(expand_button_template)
-            new_li.children('span.result').before(expand_button)
-            expand_button.click ->
-                if new_li.hasClass('open')
-                    new_li.removeClass('open')
-                    new_li.find('ul').remove()
-                else
-                    new_li.addClass('open')
-                    assembleList(result, new_li)
-
 
         # Set the appropriate classes if there were an error.
         if js_error
             new_li.addClass('js-error')
         else if cs_error
             new_li.addClass('cs-error')
+        else
+            # Results that are objects can be expanded, with their properties
+            # enumerated in a list. (And only try to expand if not an error.)
+            if typeof result is 'object' or do_dir
+                expandObject(new_li, result)
 
         # When the history entry's load button is clicked, load the source for
         # that entry.
@@ -449,7 +477,8 @@ execute = (source, dry_run=false) ->
 
         $els.clear_history.show()
         $els.replay_history.show()
-
+        
+        return result
 
 # ### clearHistory
 ###
@@ -491,9 +520,9 @@ renderInstructions = ->
 
 # ### loadPrevious
 ###
-Given a history index to load, set the current source input to that entry's
-source. Supports going either direction through the history; pass `true` for
-`forward` to move forward in the list.
+Given a history index to load, set the current source input to the source of
+that entry. Supports going either direction through the history; pass `true`
+for `forward` to move forward in the list.
 ###
 loadPrevious = (forward=false, target_index) ->
     if target_index?
@@ -543,7 +572,7 @@ toggleMultiLine = ->
 # ### resizeWidget
 ###
 Set the max-height and max-width of the widget and auto-suggest list to keep
-it visible in the window. (Being absolutely positioned, it doesn't affect the
+it visible in the window. (Being absolutely positioned, it does not affect the
 scrolling of the overall window.)
 ###
 resizeWidget = ->
@@ -678,7 +707,7 @@ bindEvents = ->
 
 # ### unloadWidget
 ###
-Remove the widget's element from the DOM and clear the `CoffeeTable` object.
+Remove the widget element from the DOM and clear the `CoffeeTable` object.
 ###
 unloadWidget = () ->
     $els?.widget.remove()
@@ -718,8 +747,12 @@ window.CoffeeTable =
         return active
     log: (args...) ->
         ctLog(args...)
+        return
     dir: (args...) ->
         ctDir(args...)
+        return
+    exec: (args...) ->
+        return ctExec(args...)
 
 
 
