@@ -16,7 +16,22 @@
         s.parentNode.insertBefore(t, s);
       })();
     </script>
-
+    <script type="text/javascript">
+        var _StatHat = _StatHat || [];
+        _StatHat.push(['_setUser', 'NTEzIBvyUppoKnlVub-SBzVOCgg~']);
+        (function() {
+                var sh = document.createElement('script'); sh.type = 'text/javascript';
+                sh.async = true;
+                sh.src = ('https:' == document.location.protocol ? 'https://' : 'http://') +
+                        'www.stathat.com/javascripts/api.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(sh, s);
+        })();
+        $('button.toggle-widget').live('click',function(e){
+            _StatHat.push(['_trackCount', 'dEelyCrIQH4ZuswYmP819yBEYlc0', 1.0]);
+            $(this).unbind();        
+        });
+    </script>
     <script src="lib/jquery-1.6.2-min.js" type="text/javascript"></script>
     <script src="lib/coffee_script-1.1.1-min.js" type="text/javascript"></script>
     <script src="coffeetable-min.js" type="text/javascript"></script>
