@@ -25,8 +25,8 @@ defaults =
     autoload_coffee_script   : true
     autoload_jquery          : true
     # URLs of CoffeeScript and jQuery files to load 
-    coffeescript_js : 'http://code.alecperkins.net/coffeetable/lib/coffee_script-1.1.1-min.js'
-    jquery_js       : 'http://code.alecperkins.net/coffeetable/lib/jquery-1.6.2-min.js'
+    coffeescript_js : 'http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.2.0/coffee-script.min.js'
+    jquery_js       : 'http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js'
 
     # Persist the history using localStorage
     local_storage   : true
