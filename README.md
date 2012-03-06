@@ -1,11 +1,9 @@
-# CoffeeTable vDEV
+# CoffeeTable v0.3.0
 
 A drop-in, CoffeeScript-fluent console for web pages.
 
 * [Demo + Instructions](http://code.alecperkins.net/coffeetable)
 * [GitHub repo](https://github.com/alecperkins/coffeetable)
-
-NOTE: This is the development version and does not contain horses. To use this version, point the `script` `src` at `coffeetable-dev-min.js`.
 
 
 ## To use
